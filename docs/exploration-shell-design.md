@@ -124,7 +124,7 @@ Codex in-app browser, localhost 시안. 브라우저 viewport는 CSS px이며 na
 | 검토 | 실제 결과 |
 | --- | --- |
 | 1280×800 요약/목록·상세/추이 | 캡처·정보 구조 확인; 긴 본문은 세로 scroll |
-| 1024×680 긴 제목 | 상세 아래 재배치, 선택 1개 유지, document 가로 넘침 없음 |
+| 1024×680 긴 제목 | 상세 아래 재배치, 선택 1개 유지, 두 줄 제목(측정 높이 39.5 CSS px), document 가로 넘침 없음 |
 | 기록 상세 Escape | 닫기 후 body-3 원래 행 초점 복귀 |
 | 체성분 상세 → 추이 | 화면 전환과 선택 측정 표시 확인 |
 | 결측 표 행 선택 | 값 없음 표시, 선 gap 유지, 0으로 표시하지 않음 |
@@ -137,6 +137,7 @@ Codex in-app browser, localhost 시안. 브라우저 viewport는 CSS px이며 na
 
 캡처는 [design/evidence/hc103](../design/evidence/hc103)에 보관한다.
 브라우저 탭의 대표 정상/긴 이름/오류/이전 조건 이미지이며 WPF/성능/메모리 evidence는 아니다.
+최소 폭에서 브랜드명이 줄바꿈되는 첫 시안을 발견해 글자/간격을 보완했다. 재검토에서 브랜드 높이 30 CSS px 한 줄과 가로 넘침 없음을 확인했다.
 전체 Windows/DPI/Automation/스크린리더/High Contrast는 **아직 미검증**이다.
 
 ## 공식 구현 근거
