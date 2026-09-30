@@ -1,0 +1,22 @@
+name: Epic
+description: 목표와 자식 Task를 묶는 작업 단위
+title: "[Epic] HC-EXX "
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: 목표와 범위
+    validations:
+      required: true
+  - type: textarea
+    id: children
+    attributes:
+      label: 자식 Task
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Epic 완료 기준
+    validations:
+      required: true

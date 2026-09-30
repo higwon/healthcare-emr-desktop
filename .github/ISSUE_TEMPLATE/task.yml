@@ -1,0 +1,29 @@
+name: Task
+description: 수용 기준과 PR 범위를 가진 구현 또는 설계 작업
+title: "[Task] HC-XXX "
+body:
+  - type: textarea
+    id: parent
+    attributes:
+      label: Epic 및 선행 작업
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: 문제·범위·제외 범위
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 수용 기준
+      description: 확인 가능한 체크리스트를 작성합니다.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: 검증 및 PR 분할
+    validations:
+      required: true
