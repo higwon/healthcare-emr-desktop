@@ -21,11 +21,20 @@ SDK 패치 번호를 개발자 PC 값으로 임의 고정하지 않고 HC-002에
 
 ## ADR-003 서버 영속성과 재시도
 
-제안: SQLite 로컬 데모 서버 + transaction 기반 plan/record/receipt 저장, API 작업 조회, 클라이언트 stable operation ID.
+제안: 첫 탐색 API는 versioned 합성 fixture 조회. 복약 단계에서만 SQLite 로컬 데모 서버 + plan/record/최소 작업 결과 transaction, 작업 조회, stable operation ID를 사용한다.
 서버가 저장의 권위자다. UI check와 HTTP 202는 완료 증거가 아니다.
 응답 유실은 작업 조회로 확인한 후 같은 command를 재시도한다. 409는 자동 덮어쓰기·무한 retry를 금지한다.
 운영 다중 서버·분산 DB·실제 OAuth·개인정보 보관은 현재 범위가 아니다.
-검증: 저장 전 실패, commit 후 응답 유실, 재시작·중복·다른 payload 재사용·DB 실패.
+검증: 저장 전 실패, commit 후 응답 유실, 재시작 조회·중복·다른 payload 재사용·DB 실패.
+범위 축소: canonical hash를 필수 구현으로 고정하지 않고 정규화 입력 비교를 사용한다. 서버 범용 receipt framework·분산 멱등성·offline outbox·자동 재시작 전송은 제외한다. UI가 미확인 결과를 정직하게 보여주는 데 필요한 최소 서버만 만든다.
+
+## ADR-004 초기 Custom Control과 측정
+
+제안: HC-301 Timeline Control은 기본 WPF container recycling을 먼저 검증하는 templated ItemsControl 계열, HC-302 Trend Control은 자체 drawing 계열을 후보로 한다. 외부 Chart/UI library는 사용하지 않는다.
+Measure/Arrange·DP invalidation·selection/focus·hit testing·Automation·DPI를 각 Control PR에서 다룬다.
+virtualization이 실제 동작하는지 먼저 측정하고, container 비용이 병목일 때만 custom rendering 또는 paging 조정을 선택한다.
+오픈소스 WPF 모듈 분석은 관련 구현 PR에서 primary source·license·차이·재구현 근거를 남긴다. 분석 대상을 아직 선정하지 않았다.
+검증: [탐색 명세](health-data-exploration.md), [측정 기준](performance-case-studies.md), HC-104/301/302. rendering 경로·downsampling·성능 예산은 실제 baseline 후 확정한다.
 
 ## ADR 변경 규칙
 

@@ -4,7 +4,7 @@
 
 | 프로젝트 | 책임 | 참조 |
 | --- | --- | --- |
-| HealthNote.Domain | 일정·기록·종료·버전 규칙, 불변 값 객체 | 없음 |
+| HealthNote.Domain | 지표·단위·시각의 값 객체, Feature별 불변 규칙(복약 포함) | 없음 |
 | HealthNote.Application | 유스케이스, 저장/조회·시계·작업 상태 포트 | Domain |
 | HealthNote.Infrastructure | HTTP client, DTO 매핑, 영속성·캐시·진단 adapter | Application, Domain |
 | HealthNote.Desktop | WPF View·ViewModel·Control, 앱 수명·DI 구성 | Application, Domain, Infrastructure |
@@ -17,10 +17,14 @@ API 전용 저장 어댑터가 공용 타깃과 호환되지 않으면 Server.In
 
 ## 클라이언트 구성
 
-ShellViewModel: 탐색·화면 수명. TodayViewModel: 오늘 요약. MedicationScheduleViewModel: 날짜 조회·선택.
-MedicationRegistrationViewModel: 입력 초안·단계·검증·저장. MedicationDetailViewModel: 약 상세·기록·종료.
-모든 화면과 업무를 하나의 MainViewModel에 모으지 않는다. 첫 Task에서 필요한 부분만 만든다.
-IMedicationQuery, IMedicationCommands, IOperationQuery, IClock, IUiDispatcher, IDiagnostics를 작은 포트로 둔다.
+Feature는 Overview / Timeline / Trend / Medication으로 나눈다.
+ShellViewModel: 탐색·화면 수명. HealthOverviewViewModel: 요약·관련 탐색.
+HealthTimelineViewModel: 기간/종류 필터·페이지·선택 상세. HealthTrendViewModel: 지표·기간·값/단위·선택.
+MedicationSchedule/Registration/DetailViewModel은 후속 상태 변경 slice다.
+HealthEvent는 여러 상세 모델을 모아 읽는 공통 projection이며 모든 도메인을 담는 거대 entity가 아니다.
+HealthEventDetail과 MeasurementSeries는 조회 계약으로 분리한다. Overview도 선택 subject·query context에 묶인다.
+IHealthDataQuery, IMedicationQuery/Commands, IOperationQuery, IClock, IUiDispatcher, IDiagnostics를 필요한 Task에서만 추가한다.
+모든 화면과 업무를 하나의 MainViewModel에 모으지 않는다.
 DI는 실행 composition root에 둔다. static service locator·도메인의 컨테이너 참조를 금지한다.
 
 ## 수명과 동시성
@@ -33,7 +37,11 @@ UI collection은 dispatcher에서 변경한다. Domain/Application은 Dispatcher
 
 ## 저장·환경
 
-첫 저장소 후보는 SQLite transaction이다. 계획·기록·작업 영수증은 같은 transaction에서 commit한다.
+첫 탐색 slice는 seed/version이 고정된 합성 fixture 조회 API다. cursor paging·기간/종류 필터·bounded trend query를 사용하며 DB가 선행 조건이 아니다.
+Timeline/Trend Custom Control을 이 단계에서 구현·측정한다. 서버 조회와 UI 가상화·rendering 경계를 분리한다.
+복약 단계의 저장소 후보는 SQLite transaction이다. 계획·기록·최소 작업 결과는 같은 transaction에서 commit한다.
+작업 결과는 API 저장 adapter의 기술 데이터이며 공통 Domain entity가 아니다. 재시작 때 미확인 ID 조회를 제공하되 자동 replay queue는 만들지 않는다.
+canonical 의미값 동등 비교만 계약에 필요하다. cryptographic hash·receipt framework·분산 실행·offline outbox는 제외한다.
 JSON 전체 파일 저장은 계약 초안 검토용 spike이고 운영 저장 방식으로 채택하지 않는다.
 Production 설정·인증은 현재 구현 대상이 아니다. Demo를 명시적으로 선택하고 loopback endpoint·합성 데이터 표시를 사용한다.
 개인 데이터가 있는 운영 기능을 추가하려면 인증·권한·암호화·보존·삭제·백업 정책 ADR부터 작성한다.
@@ -41,5 +49,7 @@ Production 설정·인증은 현재 구현 대상이 아니다. Demo를 명시�
 ## 테스트 경계
 
 Domain: 날짜/요일/시각/종료 불변식. Application: clock·저장·작업 상태 포트.
-Infrastructure/API: transaction·HTTP·serialization·fault/restart. Desktop: ViewModel 상태·command 상호 배제·stale response·dispose.
+Infrastructure/API: paging·단위/결측 serialization·HTTP delay/stale/error, 복약 transaction·fault/restart.
+Desktop: query context·selection·command 상호 배제·stale response·dispose, Custom Control STA/layout/render/keyboard/Automation 검증.
+초기 diagnostics는 query 시간·layout/render 관찰·반복 탐색 생존 객체의 측정 경계만 제공하며 의료 본문은 수집하지 않는다.
 실제 WPF는 STA·실행·UI Automation·시각 검증으로 따로 확인한다. net10 테스트 성공만으로 net48 클라이언트 호환성을 입증하지 않는다.

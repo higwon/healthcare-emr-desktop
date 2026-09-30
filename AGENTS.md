@@ -10,7 +10,7 @@
 ## 작업 시작
 
 1. README와 현재 Task를 읽는다.
-2. 관련 source-of-truth 문서만 읽는다: 범위는 epics-and-tasks, 구조는 architecture/decisions, 동작은 domain-rules/api-contracts, UI는 ui-guide, 코드는 coding-rules.
+2. 관련 source-of-truth 문서만 읽는다: 범위는 project-overview/epics-and-tasks, 구조는 architecture/decisions, 동작은 health-data-exploration/domain-rules/api-contracts, UI는 ui-guide, 코드는 coding-rules, 측정은 performance-case-studies. 공개 서비스 조사·기존 복약 시안은 참고자료다.
 3. `git status --short --branch`, 현재 원격·베이스·이슈 의존성을 확인한다.
 4. Ready 기준을 만족한 Task 하나를 선택하고 `codex/hc-xxx-description` 브랜치에서 작업한다.
 

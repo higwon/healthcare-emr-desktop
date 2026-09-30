@@ -23,24 +23,29 @@ force push·history rewrite·보호 규칙 변경·자동 merge는 요청 없으
 
 | 순서 | Task/PR | 포함 범위 | 선행 조건 |
 | --- | --- | --- | --- |
-| Design baseline | HC-001~004 / docs(HC-001): establish design and workflow baseline | 구조·규칙·계약·Epic/Task·UI 증거·템플릿만 | 실서비스 조사 |
-| Foundation | HC-101 / chore(HC-101): bootstrap solution and Windows CI | 프로젝트·참조·빌드·실행·테스트 기반, 업무 기능 없음 | 기준 PR 검토·ADR 선택 |
-| MVVM | HC-102 / feat(HC-102): establish navigation and screen lifetime | 분리 ViewModel·DI·취소·오류 경계 | HC-101 |
-| UI foundation | HC-103 / feat(HC-103): implement approved shell and resources | 토큰·화면 shell·접근성, 업무 write 없음 | HC-004, HC-102 |
-| Domain | HC-201 / feat(HC-201): model medication schedules and records | 불변식·수명·clock·테스트 | HC-003, HC-101 |
-| Persistence/API | HC-202 / feat(HC-202): persist plans, records and operations | SQLite transaction·DTO·조회/쓰기·계약 테스트 | HC-201 |
-| Recovery | HC-203 / feat(HC-203): handle unknown outcomes and retry | stable ID·operation query·restart·conflict | HC-202 |
-| Registration | HC-204 / feat(HC-204): register medication through WPF | 직접 입력·일정·확인·API 저장, 실패 초안 유지 | HC-103, HC-203 |
-| Intake journey | HC-205 / feat(HC-205): record and end medication schedules | 날짜 조회·체크·취소·종료·통합 증거 | HC-204 |
-| Follow-ups | HC-301~402 | 체성분·증상·품질의 각 Task PR | 복약 흐름 완료 |
+| Design baseline | HC-001~004 / PR #22 Draft | 설계·계약·규칙·Task만 | 설계 리뷰 |
+| 구현 PR 1 | HC-101 / Solution·Windows CI | 프로젝트/참조·TFM 검증·Release build/test·최소 실행, 기능 없음 | 기준 검토·ADR 선택 |
+| 구현 PR 2 | HC-102 / MVVM·수명·진단 | 분리 VM·DI·취소/generation·오류·구독/해제·안전한 진단 | HC-101 |
+| 구현 PR 3 | HC-103 / 탐색 shell·리소스 | 탐색 host·focus/Automation·DPI·layout baseline, write 없음 | HC-004, HC-102·탐색 UI 시안 검토 |
+| 첫 기능 A | HC-104 | 합성 조회 API PR → Overview/Timeline paging·상태 UI PR | HC-103 |
+| 첫 기능 B | HC-301 | 자체 Timeline Control PR → 실제 측정 기반 개선 PR | HC-104 |
+| 첫 기능 C | HC-302 | series API/VM PR → 자체 Trend Control PR → 측정 기반 개선 PR | HC-301 |
+| Medication Domain | HC-201 | 복약 불변식·clock·테스트 | HC-003, HC-302 |
+| Medication API | HC-202 | SQLite·최소 작업 결과·DTO/transaction | HC-201 |
+| Medication Recovery | HC-203 | unknown·작업 조회·명시적 retry·409·재시작 확인 | HC-202 |
+| Medication UI | HC-204 → HC-205 | 등록·일정·기록·종료·실패 UX | HC-203 |
+| 전체 재검증/증거 | HC-401 → HC-402 | 누적 품질 재검증·Case Study·packaging·README | 탐색·복약 완료 |
 
 한 PR이 동작·화면·저장 계약 변경까지 검토하기 어려울 정도면 같은 Task 안에서 하위 PR로 나눈다.
 기능을 서버까지 완성하는 과정은 여러 작은 PR로 이어질 수 있다. 거대한 단일 'MVP 완성' PR은 만들지 않는다.
+첫 3개는 기반 PR, 첫 기능 단계는 HC-104/301/302다. 자체 Control이 실제로 완성된 초기 결과물 없이 Medication 단계로 넘어가지 않는다.
+HC 숫자는 기존 식별자를 보존한 것이며 실행 순서가 아니다. HC-301/302는 HC-201보다 먼저 수행한다.
 
 ## 검증·merge
 
 docs-only: diff·문서 링크·Task mapping·미확인 사실·source 범위 검사. 코드 테스트 성공을 꾸며 쓰지 않는다.
-code: Windows Release restore/build, 관련 자동 테스트, API 계약/실패 시나리오, UI PR이면 실제 WPF 캡처/키보드.
+code: Windows Release restore/build, 관련 자동 테스트, API 계약/실패 시나리오, UI PR이면 실제 WPF 100/150/200% DPI·최소 창·keyboard/Automation·Binding 오류·대량 데이터 layout/render·반복 탐색 수명 증거.
+[측정 기준](performance-case-studies.md)에 원자료를 연결하고 필수 미검증 상태에서는 Done으로 전환하지 않는다.
 CI 이름은 HC-101에서 `build-and-test`로 정의하고 TRX/coverage·UI evidence를 artifact로 보존한다. 임의 커버리지 % gate 없음.
 branch protection에 required check를 권장하되 사용자가 요청하기 전 repository security 설정을 바꾸지 않는다.
 Draft → checks·설명·증거 완료 → review. merge는 저장소 소유자 결정 또는 명시적 위임에 따른다.

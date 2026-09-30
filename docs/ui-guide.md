@@ -1,17 +1,20 @@
 # UI 구현 기준
 
-실서비스 기능의 근거는 service-flow-research, 조작 시안의 범위는 ui-prototype-review를 따른다.
+제품 화면 요구는 project-overview·health-data-exploration을 따른다. service-flow-research는 도메인 참고, ui-prototype-review는 기존 복약 시안의 제한된 검증 기록이다.
 브라우저 시안은 화면 검토 도구이며 WPF 품질 증거가 아니다.
 
 ## 화면·토큰
 
-HC-01 오늘의 건강: 복약 중심 카드, 체성분 연동 상태와 증상 기록 진입.
+EXP-01 Health Overview: 선택 프로필·기간 요약, 최근 이벤트, Timeline/Trend로 이어지는 탐색.
+EXP-02 Health Timeline: 기간·타입 필터, 연/월 grouping·가상화 목록, 선택 상세·query state.
+EXP-03 Health Trend: 지표/기간·단위·결측·합성 참고 구간, 포인터/키보드 선택과 표 대안.
+HC-01 오늘의 건강은 기존 시안 ID이며 전체 shell 승인 기준으로 재사용하지 않는다.
 MED-01 일정: 날짜 선택·예정 항목·완료/미기록·선택 상세.
 MED-02~04 등록: 이름/종류 → 기간/요일/복수 시각/메모 → 확인.
 MED-05 상세/종료: 출처·일정·기록·버전·명시적 종료 확인.
 MED-06 날짜별 기록: 현재 선택 날짜와 server query context 일치.
 
-시안 토큰: 기본 14 DIP, 보조 12 DIP, 제목 27~29 DIP, 카드 간격 16 DIP, radius 16 DIP.
+기존 시안 토큰(탐색 화면 승인 전 재검토): 기본 14 DIP, 보조 12 DIP, 제목 27~29 DIP, 카드 간격 16 DIP, radius 16 DIP.
 녹색은 주요 행동·선택·완료, 오류는 붉은 계열+문구. 성공 알림까지 오류 색으로 표시하지 않는다.
 Window min size·정보 밀도·줄바꿈 기준은 HC-004에서 desktop용으로 확정한다. prototype의 320px 배치를 WPF 최소 창 폭으로 자동 채택하지 않는다.
 라이트 우선 구현, 다크는 후속 명시 범위. system high contrast 지원과 keyboard focus는 기본이다.
@@ -26,6 +29,10 @@ Saving은 일시 busy, OutcomeUnknown은 작업 identity가 있는 복구 상태
 조회 데이터 없음·권한/연결 문제·등록된 계획 없음·그 날짜 일정 없음은 다른 상태다.
 
 ## UI PR 증거
+
+아래는 각 UI Task의 Done 조건이다. HC-401은 첫 검사가 아니라 앱 전체 재검증이다.
+대량 합성 데이터에서 query 시간·UI 적용·scroll/selection·layout/render를 구분하고 baseline raw evidence를 [측정 기준](performance-case-studies.md)에 연결한다.
+DP/리소스/theme 변경·반복 탐색의 invalidation·구독·timer·callback 수명도 확인한다. 미검증 필수 조건이 있으면 Task를 Done으로 표시하지 않는다.
 
 - 정상·빈·지연·실패·재시도·긴 이름·많은 항목·비활성 상태의 대표 캡처.
 - 지원 최소 창·기본 창·최대 창, DPI 100/150/200%, 모니터 이동 결과.

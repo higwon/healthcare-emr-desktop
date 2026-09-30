@@ -24,3 +24,5 @@ Closes #<task> (수용 기준을 모두 만족하는 경우만)
 - [ ] Domain/MVVM 경계·수명/해제 확인
 - [ ] 관련 테스트 또는 docs-only 검사
 - [ ] 개인 데이터·토큰·로그 본문 없음
+
+UI PR 추가: 100/150/200% DPI·keyboard/Automation·Binding 오류·대량 데이터 layout/render·반복 탐색 수명 증거. 성능/메모리 Case Study가 있으면 원자료·환경·before/after를 연결한다.

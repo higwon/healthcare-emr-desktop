@@ -42,7 +42,9 @@
 - Grid/Auto/* 크기와 wrap/minmax로 설계한다. 고정 위치 Canvas는 차트 등 좌표가 의미인 요소에 한정한다.
 - 목록은 기본 가상화·Recycling·bounded query부터 사용한다. ItemsControl/외부 ScrollViewer가 가상화를 깨는지 실제 측정한다.
 - 조회 pagination과 UI virtualization은 서로 다른 문제다. 전체 이력을 불러온 뒤 virtualization만 켜고 완료로 하지 않는다.
-- Custom Control은 dependency property·템플릿·키보드·AutomationPeer를 제공한다. 우선 그래프/상태 표현 같은 재사용 요구부터 만든다.
+- Custom Control은 첫 데이터 탐색 단계부터 dependency property·템플릿·키보드·AutomationPeer를 제공한다. 외부 Chart/UI library를 사용하지 않는다.
+- Measure/Arrange·hit testing·selection·focus·DPI 좌표 변환과 invalidation 근거를 분리한다. 모든 DP에 AffectsMeasure를 붙이거나 hover마다 전체 데이터를 재계산하지 않는다.
+- 대량 데이터는 query paging·container recycling·drawing 비용을 별도 측정한다. downsampling은 selection·결측·극값·표 원본을 보존할 때만 측정 근거로 도입한다.
 - DependencyProperty callback에서 HTTP·DB를 호출하지 않는다. drawing과 데이터 갱신·선택 상태를 분리한다.
 - 포커스 시각 표시를 제거하지 않는다. tab 순서·escape·초점 복귀·기본 버튼·스크린리더 명칭을 정의한다.
 - high DPI는 DIP·UseLayoutRounding·아이콘/텍스트/선/Popup를 함께 확인한다. 브라우저 폭 테스트를 WPF DPI 검증으로 대체하지 않는다.
@@ -53,6 +55,7 @@
 - event/messenger/timer/token 등록에는 같은 scope의 해제가 있어야 한다. 중복 Loaded 등록 방지.
 - View가 외부 event를 연결하면 Loaded/Unloaded에서 짝을 맞추되, ViewModel Dispose는 실제 scope/window 종료 때만 호출한다.
 - 짧은 Unloaded/reload를 앱 종료로 취급하지 않는다. 취소·dispose 이후 지연 응답의 화면 변경을 막는다.
+- static event·DispatcherTimer·CollectionChanged·비동기 callback의 root와 해제를 실제 profiler로 확인한다. 반복 상세 열기/닫기와 Loaded/Unloaded 시나리오를 초기 UI PR부터 보존한다.
 - async initialization은 idempotent. 작업 종료 순서와 UI dispatcher shutdown 중 callback 정책을 테스트한다.
 
 ## 데이터·테스트·로그
@@ -61,4 +64,4 @@
 - operation key를 로그에 남길 수 있어도 의료 본문·약 이름·증상·token·원문 payload는 남기지 않는다. 개인정보 없는 allowlist 진단.
 - 테스트 이름은 상황_행동_결과. clock·ID·지연을 주입하고 Thread.Sleep에 의존하지 않는다.
 - 규칙·race·실패·중복·복구에 집중한다. getter/setter를 그대로 따라 쓰는 테스트나 허위 커버리지 목표를 만들지 않는다.
-- WPF 구현 PR은 Binding 오류·실행·UI 캡처·키보드 검증을 포함한다. 컴파일만 통과했다고 UI 완료로 하지 않는다.
+- WPF 구현 PR은 100/150/200% DPI·최소 창·Automation·대량 데이터 layout/render 측정과 Binding 오류·실행·UI 캡처·키보드 검증을 포함한다. 컴파일만 통과했다고 UI 완료로 하지 않는다.

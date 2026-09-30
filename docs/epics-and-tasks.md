@@ -1,17 +1,24 @@
 # Epic / Task 계획
 
-2026-09-30. 구현 scope의 source of truth. 실제 진행 상태는 GitHub issue에서 관리한다.
-범위 변경은 이 문서와 issue AC를 함께 갱신한다. 이전 EMR/MED/WB ID 초안은 보류하며 새 작업 ID는 HC-XXX로 통일한다.
-현재는 E01 설계 문서 초안과 시안이 있고 리뷰 전이다. E02 이후 실행 작업은 모두 Backlog다.
-작업을 생성했다는 이유로 Done 표시하지 않는다. Ready/Done·PR 순서는 development-workflow를 따른다.
+2026-09-30 리뷰 반영. 구현 범위의 source of truth, 실제 진행 상태는 GitHub issue다.
+기존 5 Epic/16 Task의 ID·URL을 보존하고 HC-104 조회 작업 하나만 추가했다. 현재 5 Epic/17 Task.
+E01은 Review, 나머지는 Backlog. 생성/문서 작성만으로 Done이 아니다. Ready/Done은 development-workflow를 따른다.
+HC 숫자는 실행 순서가 아니다. 첫 기능 단계는 HC-104 → HC-301 → HC-302이며 Medication보다 먼저다.
+
+## 공통 UI 완료 조건
+
+각 UI Task는 실제 WPF 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation·Binding 오류·대량 데이터 query/layout/render·반복 탐색 수명 증거를 포함한다.
+성능/메모리 자료는 [Case Study 기준](performance-case-studies.md)에 연결한다. HC-401은 전체 앱 재검증이며 최초 측정 단계가 아니다.
+필수 미검증 상태를 Done으로 표시하지 않는다.
 
 ## HC-E01 설계·도메인·개발 운영 기준
 
-목표: 구현 전에 제품 범위·계층·계약·UI·코드·GitHub 운영 기준을 검토한다.
-Epic 완료: 모든 자식 Task 수용 기준·검증·관련 PR merge 확인.
+목표: 자체 Healthcare Data Client 시나리오와 구조·계약·UI·코드·개발 운영 기준을 검토한다.
+Epic 완료: 모든 자식 AC·실제 검증·관련 PR merge 확인.
 
 ### HC-001 저장소 운영·Epic/Task·PR 기준
 
+- GitHub: [#6](https://github.com/higwon/healthcare-emr-desktop/issues/6)
 - 선행: 없음
 - 범위: README·AGENTS·workflow·이슈 템플릿·Epic/Task 매핑
 - PR: Design baseline
@@ -25,6 +32,7 @@ Epic 완료: 모든 자식 Task 수용 기준·검증·관련 PR merge 확인.
 
 ### HC-002 아키텍처·런타임·MVVM ADR
 
+- GitHub: [#7](https://github.com/higwon/healthcare-emr-desktop/issues/7)
 - 선행: HC-001
 - 범위: 계층·참조·net48/netstandard2.0/net10 후보·패키지 비교
 - PR: Design baseline
@@ -36,39 +44,42 @@ Epic 완료: 모든 자식 Task 수용 기준·검증·관련 PR merge 확인.
 - [ ] Domain·Application·DTO·ViewModel 경계 정의
 - [ ] ADR 제안/확정과 검증 결과를 구분
 
-### HC-003 복약 도메인·API·복구 계약
+### HC-003 탐색·복약 도메인·API·실패 계약
 
+- GitHub: [#8](https://github.com/higwon/healthcare-emr-desktop/issues/8)
 - 선행: HC-002
-- 범위: 날짜·요일·시각·종료·버전·멱등성·ProblemDetails
+- 범위: HealthEvent/detail/series projection·query context·paging·결측·Medication 불변식·제한된 결과 확인
 - PR: Design baseline
 - 검증: 계약 사례·불변식·경계값 리뷰
 
 수용 기준:
 
-- [ ] 계획·occurrence·기록·receipt·출처와 시간대 정의
-- [ ] 수정 후 과거 보존·종료 경쟁·미확인 결과·restart 정책 명시
-- [ ] API DTO·에러·작업 조회·transaction 검증 시나리오 존재
+- [ ] 공통 탐색 projection과 Feature domain을 분리하고 시각·단위·결측·cursor 경계 정의
+- [ ] 조회 취소·stale 응답과 쓰기 conflict/OutcomeUnknown를 구분
+- [ ] 최소 작업 결과·명시적 재시도 범위와 제외된 backend 복잡도를 기록
 
 ### HC-004 UI 상태·WPF 매핑·코딩 규칙
 
+- GitHub: [#9](https://github.com/higwon/healthcare-emr-desktop/issues/9)
 - 선행: HC-003
-- 범위: 홈/복약 시안·토큰·state machine·수명·C#/XAML 규칙
+- 범위: Overview/Timeline/Trend UI 상태·Custom Control·토큰·수명·C#/XAML 규칙; 기존 복약 시안 참고
 - PR: Design baseline
 - 검증: 시안 증거·규칙/수용 기준 비교
 
 수용 기준:
 
-- [ ] 정상·빈·로딩·실패·unknown·긴 이름·키보드 상태 정의
-- [ ] 시안 구현 범위와 WPF DPI 미검증을 구분
-- [ ] View/ViewModel/Control 경계와 focus/dispose 규칙 명시
+- [ ] 정상·빈·로딩·실패·stale·unknown·선택/키보드 상태 정의
+- [ ] 각 UI Task의 DPI·Automation·Binding·대량 데이터 측정 기준 정의
+- [ ] 시안과 실제 WPF 증거 구분·성능/메모리 Case Study 계획·Control 경계 정의
 
-## HC-E02 WPF 기반·MVVM·디자인 시스템
+## HC-E02 WPF 기반·수명·디자인·진단
 
-목표: 업무 기능과 분리된 실행·CI·수명·테마 기반을 구축한다.
-Epic 완료: 모든 자식 Task 수용 기준·검증·관련 PR merge 확인.
+목표: 실행/CI·MVVM·화면 수명·shell·측정 경계를 먼저 구축한다.
+Epic 완료: 모든 자식 AC·실제 검증·관련 PR merge 확인.
 
 ### HC-101 솔루션·프로젝트 참조·Windows CI
 
+- GitHub: [#10](https://github.com/higwon/healthcare-emr-desktop/issues/10)
 - 선행: HC-002, HC-003, HC-004
 - 범위: 실행 기반과 test projects, CI artifact
 - PR: Foundation PR
@@ -82,8 +93,9 @@ Epic 완료: 모든 자식 Task 수용 기준·검증·관련 PR merge 확인.
 
 ### HC-102 MVVM·탐색·화면 수명·설정 기반
 
+- GitHub: [#11](https://github.com/higwon/healthcare-emr-desktop/issues/11)
 - 선행: HC-101
-- 범위: composition root·분리 VM·command·scope·safe errors·demo options
+- 범위: composition root·분리 VM·command·scope·safe errors·demo options·진단 경계
 - PR: MVVM PR
 - 검증: command/state/lifetime 테스트·기본 shell 실행
 
@@ -91,12 +103,16 @@ Epic 완료: 모든 자식 Task 수용 기준·검증·관련 PR merge 확인.
 
 - [ ] ViewModel의 WPF View/HTTP/DB 직접 의존 없음
 - [ ] 중복 실행·조회 취소·stale response·종료 후 callback 차단
-- [ ] 구독 해제·초기화 guard·Demo 명시 설정 테스트
+- [ ] event/static event/timer/CollectionChanged 해제·초기화 guard·Demo 설정 검증
+- [ ] 안전한 진단에 query/apply 타이밍·화면 scope 생존을 관찰할 경계 제공
+- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state 확인
+- [ ] Binding 오류 없음·대표 상태 캡처·대량 합성 데이터 query/layout/render 측정 및 반복 탐색 수명 증거
 
-### HC-103 승인된 UI shell·리소스·접근성
+### HC-103 탐색 UI shell·리소스·접근성
 
+- GitHub: [#12](https://github.com/higwon/healthcare-emr-desktop/issues/12)
 - 선행: HC-004, HC-102
-- 범위: 리소스 토큰·화면 분리·목록/상세·입력/포커스
+- 범위: Overview/Timeline/Trend 탐색 host·리소스·목록/상세 패턴·포커스; 브라우저 복약 홈 재사용 승인 아님
 - PR: UI foundation PR
 - 검증: WPF smoke·UI 캡처·DPI 검증 범위 기록
 
@@ -105,15 +121,74 @@ Epic 완료: 모든 자식 Task 수용 기준·검증·관련 PR merge 확인.
 - [ ] 정해진 최소/기본 창에서 wrap·selection·scroll 검증
 - [ ] Tab/Shift+Tab/Enter/Escape·초점 복귀·Automation 명칭
 - [ ] 대표 WPF 캡처·Binding 오류 검사; 실제 업무 write 없음
+- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state 확인
+- [ ] Binding 오류 없음·대표 상태 캡처·대량 합성 데이터 query/layout/render 측정 및 반복 탐색 수명 증거
 
-## HC-E03 복약관리 수직 구현과 복구
+## HC-E03 Healthcare Data 탐색·Custom Controls
 
-목표: 직접 등록부터 일정·복용 기록·종료를 영속 API와 WPF에서 완성한다.
-Epic 완료: 모든 자식 Task 수용 기준·검증·관련 PR merge 확인.
+목표: Overview·Timeline·Trend와 합성 API async 상태·초기 Custom Control·실제 성능/수명 측정을 구현한다.
+Epic 완료: 모든 자식 AC·실제 검증·관련 PR merge 확인.
+
+### HC-104 Health Overview·Timeline 합성 API 조회
+
+- GitHub: [#23](https://github.com/higwon/healthcare-emr-desktop/issues/23)
+- 선행: HC-003, HC-103
+- 범위: 고정 seed/version fixture·overview/events/detail API·paging/filter·VM query state·기본 탐색 화면
+- PR: 조회 계약/API PR → Overview/Timeline 상태 UI PR
+- 검증: API/VM contract·결정적 지연 race·WPF 탐색 증거·Release 측정
+
+수용 기준:
+
+- [ ] Overview→Timeline→상세 탐색, 기간/타입/subject context·cursor ordering 계약 검증
+- [ ] Loading/Empty/Error/Stale·retry·취소·지연 순서 역전 시 선택/화면 보호
+- [ ] 100/1,000/10,000건 fixture·query/UI 적용 비용 baseline·반복 상세 scope 관찰
+- [ ] HC-301과 같은 첫 기능 단계에 자체 Control을 완성하며 기본 목록만으로 E03 종료하지 않음
+- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state 확인
+- [ ] Binding 오류 없음·대표 상태 캡처·대량 합성 데이터 query/layout/render 측정 및 반복 탐색 수명 증거
+
+### HC-301 Health Timeline Custom Control·초기 성능
+
+- GitHub: [#18](https://github.com/higwon/healthcare-emr-desktop/issues/18)
+- 선행: HC-104
+- 범위: templated Timeline Control·grouping·selection·기본 recycling 측정·layout/invalidation
+- PR: Timeline Control PR → 측정에서 발견된 문제의 개선 PR
+- 검증: Control STA·UI Automation·layout/render profiler·재현 script/fixture
+
+수용 기준:
+
+- [ ] DP·템플릿·Measure/Arrange·선택/focus·hit testing·AutomationPeer 제공
+- [ ] query pagination과 UI 가상화 분리·실제 container recycling 동작 검증
+- [ ] 10,000건 합성 탐색의 scroll/layout/render 측정·원자료와 병목 가설 기록
+- [ ] 외부 UI library 없음·첫 기능 단계에서 실제 자체 Control 통합
+- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state 확인
+- [ ] Binding 오류 없음·대표 상태 캡처·대량 합성 데이터 query/layout/render 측정 및 반복 탐색 수명 증거
+
+### HC-302 Health Trend Custom Control·측정 시각화
+
+- GitHub: [#19](https://github.com/higwon/healthcare-emr-desktop/issues/19)
+- 선행: HC-301
+- 범위: HealthTrendControl drawing·지표/기간·unit/missing/reference range·표 대안
+- PR: series API/VM PR → Trend Control PR → 측정 기반 개선 PR
+- 검증: series contract·Control STA·UI Automation·DPI·profiler 원자료
+
+수용 기준:
+
+- [ ] DP·Measure/Arrange·resize·hover·hit testing·keyboard selection·AutomationPeer 제공
+- [ ] 결측 gap·단위·점별 합성 참고 구간·원본 표·의료 판정 없음
+- [ ] 최대 10,000점 rendering/layout·선택·invalidation baseline, downsampling은 측정 후 결정
+- [ ] Timeline/Trend에서 발견한 실제 성능 문제 Case Study 자료 누적
+- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state 확인
+- [ ] Binding 오류 없음·대표 상태 캡처·대량 합성 데이터 query/layout/render 측정 및 반복 탐색 수명 증거
+
+## HC-E04 Medication 상태 변경·실패 복구
+
+목표: 후속 Feature로 복약 등록·일정·기록·종료와 최소 서버 기반 실패/충돌 UX를 검증한다.
+Epic 완료: 모든 자식 AC·실제 검증·관련 PR merge 확인.
 
 ### HC-201 일정·기록·종료 도메인 구현
 
-- 선행: HC-003, HC-101
+- GitHub: [#13](https://github.com/higwon/healthcare-emr-desktop/issues/13)
+- 선행: HC-003, HC-302
 - 범위: 불변 모델·clock·요일/복수 시각·기간·schedule version
 - PR: Domain PR
 - 검증: 결정적 Domain 테스트·표 기반 사례
@@ -126,32 +201,37 @@ Epic 완료: 모든 자식 Task 수용 기준·검증·관련 PR merge 확인.
 
 ### HC-202 영속 저장·API·작업 조회
 
+- GitHub: [#14](https://github.com/higwon/healthcare-emr-desktop/issues/14)
 - 선행: HC-201
-- 범위: SQLite·transaction·DTO mapping·v1 endpoints
+- 범위: SQLite·transaction·DTO mapping·복약 endpoints·최소 작업 결과 조회
 - PR: Persistence/API PR
 - 검증: 실제 임시 DB·API 통합·serialization·restart 테스트
 
 수용 기준:
 
-- [ ] plan/record/history/receipt가 같은 transaction에서 commit
-- [ ] 같은 작업 재요청·payload 충돌·expected version 검증
-- [ ] 재시작 데이터 보존·ProblemDetails·operation 조회 계약 확인
+- [ ] plan/record/history/최소 작업 결과가 같은 transaction에서 commit
+- [ ] 같은 작업 재요청·정규화 입력 충돌·expected version 검증
+- [ ] 재시작 보존·ProblemDetails·operation 조회; 범용 receipt/hash framework 없음
 
 ### HC-203 미확인 결과·재시도·충돌 복구
 
+- GitHub: [#15](https://github.com/higwon/healthcare-emr-desktop/issues/15)
 - 선행: HC-202, HC-102
-- 범위: 클라이언트 command snapshot·operation query·재시작 복구
+- 범위: immutable command snapshot·작업 조회·명시적 재시도·재시작 미확인 상태 확인
 - PR: Recovery PR
-- 검증: fault adapter·HTTP/DB·ViewModel 상태 테스트
+- 검증: fault adapter·API/VM 상태·재시작 작업 조회 검증
 
 수용 기준:
 
-- [ ] 저장 전 실패와 commit 후 응답 유실이 구분됨
-- [ ] 재시도·restart가 같은 ID를 유지해 effect 중복 없음
-- [ ] 409 자동 덮어쓰기 없음·stale query/unknown 중 write 정책
+- [ ] 저장 전 실패와 commit 후 응답 유실을 UI 상태에서 구분
+- [ ] 명시적 retry/restart 조회는 같은 ID를 유지·자동 replay/offline queue 없음
+- [ ] 409 자동 덮어쓰기 없음·unknown 중 동일 자원 write 차단
+- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state 확인
+- [ ] Binding 오류 없음·대표 상태 캡처·대량 합성 데이터 query/layout/render 측정 및 반복 탐색 수명 증거
 
 ### HC-204 WPF 직접 등록·일정·저장 흐름
 
+- GitHub: [#16](https://github.com/higwon/healthcare-emr-desktop/issues/16)
 - 선행: HC-103, HC-203
 - 범위: 이름/종류→기간/요일/복수 시각→확인→API 저장
 - PR: Registration PR
@@ -162,9 +242,12 @@ Epic 완료: 모든 자식 Task 수용 기준·검증·관련 PR merge 확인.
 - [ ] 모든 입력 검증·safe message·저장 중 상호 배제
 - [ ] 실패/응답 유실에도 초안 유지·명시적 재시도
 - [ ] 서버 확인 후 등록 반영·닫기/이전/초점·긴 이름 검증
+- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state 확인
+- [ ] Binding 오류 없음·대표 상태 캡처·대량 합성 데이터 query/layout/render 측정 및 반복 탐색 수명 증거
 
 ### HC-205 날짜별 체크·취소·종료 및 통합 데모
 
+- GitHub: [#17](https://github.com/higwon/healthcare-emr-desktop/issues/17)
 - 선행: HC-204
 - 범위: 날짜 조회·선택 상세·기록 변경·종료 확인·flow evidence
 - PR: Intake journey PR
@@ -175,58 +258,34 @@ Epic 완료: 모든 자식 Task 수용 기준·검증·관련 PR merge 확인.
 - [ ] 미래/종료 항목 쓰기 차단·과거 조회/수정 정책 준수
 - [ ] 선택/날짜 변경 stale response 차단·동시 변경 처리
 - [ ] 등록→조회→체크/취소→종료→restart 데모 재현
+- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state 확인
+- [ ] Binding 오류 없음·대표 상태 캡처·대량 합성 데이터 query/layout/render 측정 및 반복 탐색 수명 증거
 
-## HC-E04 체성분 추이·증상 기록 확장
+## HC-E05 Windows 품질 재검증·배포·포트폴리오
 
-목표: 검증된 기능과 합성 데이터 계약을 바탕으로 조회·추이·기록 UI를 확장한다.
-Epic 완료: 모든 자식 Task 수용 기준·검증·관련 PR merge 확인.
+목표: 초기부터 누적한 증거를 앱 전체에서 재검증하고 실제 성능 2~3건·Memory Case Study 1건·설치/재현 자료로 정리한다.
+Epic 완료: 모든 자식 AC·실제 검증·관련 PR merge 확인.
 
-### HC-301 체성분 데이터 계약·추이 Custom Control
+### HC-401 앱 전체 Windows 품질 재검증·Case Study
 
-- 선행: HC-205
-- 범위: 합성 측정·기기/출처·단위·결측·기간·표/차트
-- PR: Body data PR 후 Trend control PR로 분할
-- 검증: contract·control/STA·시각·대량 데이터 측정
-
-수용 기준:
-
-- [ ] 조회 DTO와 값/단위/결측 이유·기기별 누락 정의
-- [ ] 키보드 선택·AutomationPeer·크기/DPI·표 대안 제공
-- [ ] 임의 건강 점수/AI 판정 없음·기본 가상화 성능 측정
-
-### HC-302 증상 질문·기록 UI 범위 검증과 구현
-
-- 선행: HC-205
-- 범위: 확인된 질문 흐름·합성 기록·조회·draft restoration
-- PR: Symptom design PR 후 Record UI PR
-- 검증: 범위 리뷰→계약/VM 테스트→WPF 캡처
-
-수용 기준:
-
-- [ ] 실제 도움말/내부 화면 근거와 자체 질문 시나리오 구분
-- [ ] 의료 판단 엔진 없이 기록·탐색·빈/오류 상태 제공
-- [ ] 증상 개인정보 없는 로그·입력 초안/취소/수명 검증
-
-## HC-E05 Windows 품질·배포·포트폴리오
-
-목표: DPI·접근성·성능·설치·복구와 재현 가능한 증거를 확보한다.
-Epic 완료: 모든 자식 Task 수용 기준·검증·관련 PR merge 확인.
-
-### HC-401 DPI·접근성·성능·수명 검증
-
+- GitHub: [#20](https://github.com/higwon/healthcare-emr-desktop/issues/20)
 - 선행: HC-205, HC-301, HC-302
-- 범위: 100/150/200% DPI·monitor·keyboard·Automation·large data
+- 범위: 각 UI PR 증거를 앱 전체에서 재검증·장시간 탐색·Memory/Performance Case Study 통합
 - PR: Quality PR; 발견 문제는 작게 분할
-- 검증: Windows matrix·screenreader smoke·성능 baseline
+- 검증: Windows matrix·screenreader smoke·CPU/layout/render·memory profiler 재현
 
 수용 기준:
 
-- [ ] 지원 환경·장비·Release·데이터·측정법 기록
-- [ ] 모니터 이동·긴 이름·탭순서·읽기·Binding 오류 검증
-- [ ] 기본 가상화·지연·반복 탐색 수명 측정; 결과 근거로 수정
+- [ ] 각 UI Task에서 누적한 DPI/keyboard/Automation·Binding·대량 데이터 측정을 앱 전체에서 재검증
+- [ ] 실제 WPF 성능 문제 2~3건의 Problem/Hypothesis/Measurement/Root Cause/Solution/BeforeAfter·원자료
+- [ ] 실제 profiler Memory Case Study 1건: 반복 상세 열기/닫기·생존 VM/구독/timer/callback root 확인
+- [ ] 지원 환경·Release·seed·측정법·미해결 결과 기록; 가짜 숫자/의도적 결함 없음
+- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state 확인
+- [ ] Binding 오류 없음·대표 상태 캡처·대량 합성 데이터 query/layout/render 측정 및 반복 탐색 수명 증거
 
 ### HC-402 설치·진단·재시작 복구·포트폴리오
 
+- GitHub: [#21](https://github.com/higwon/healthcare-emr-desktop/issues/21)
 - 선행: HC-401
 - 범위: 설치 선행조건·안전한 진단·배포 artifact·clean-machine demo
 - PR: Packaging PR 후 Portfolio evidence PR
@@ -236,9 +295,10 @@ Epic 완료: 모든 자식 Task 수용 기준·검증·관련 PR merge 확인.
 
 - [ ] 설치/업데이트 실패·설정/미확인 작업 보존·복구 확인
 - [ ] 로그 allowlist·합성 데이터·Demo 제한 표시
-- [ ] 이슈/PR/테스트/스크린샷/ADR을 연결한 재현 가이드
+- [ ] README에 실제 성능/메모리 결과·PR/원자료·재현 가이드 연결
 
-## 공통 제외 범위
+## 보류·제외 범위
 
-실제 네이버/인바디 인증·의약품 API·OCR·AI 진단·처방·병원/가족 공유·운영 보안 인증은 별도 ADR/Task 없이 추가하지 않는다.
-실제 사용자 정보·기관 API를 연결하는 일과 합성 데이터 포트폴리오 구현을 구분한다.
+HC-301은 기존 체성분 후속 Task에서 초기 Timeline Control로, HC-302는 증상 입력 Task에서 초기 Trend Control로 조정했다. 기존 구현/완료 증거는 없으며 삭제/완료 처리하지 않았다.
+Body Measurement·Symptom은 Timeline의 합성 event/detail로 포함하되 전용 입력·질문 engine은 후속 범위다.
+실제 기관/네이버/인바디 인증·OCR·의료 판정·처방·병원/가족 공유·운영 보안·분산 서버·offline outbox·자동 replay는 별도 ADR/Task 없이 추가하지 않는다.
