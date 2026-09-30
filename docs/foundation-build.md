@@ -8,7 +8,10 @@
 Desktop net48 WPF, Domain/Application/Infrastructure netstandard2.0, API net10.0, Desktop.Tests net48.
 공유 계층은 현재 빈 assembly다. 기능/DTO/VM skeleton을 미리 추가하지 않는다.
 Windows와 .NET 10 SDK, .NET Framework 4.8 호환 런타임이 필요하다. Visual Studio는 .NET 10 SDK 지원 버전을 사용한다.
-SDK는 10.0.100 baseline + latestFeature(10.0 SDK feature band 내 roll-forward), CI 설치는 10.0.x.
+SDK는 10.0.100 baseline + latestFeature(10.0 내 feature band 간 roll-forward), CI 설치는 10.0.x.
+패키지는 lockfile로 고정하지만 SDK/compiler 환경까지 동일하게 고정한 reproducible build는 아니다.
+초기 검증은 로컬 SDK 10.0.300, CI SDK 10.0.401로 같은 검증 명령을 서로 다른 환경에서 실행했다.
+이는 .NET 10의 최신 feature band 호환을 확인하는 전략이다. SDK 고정이 필요해지면 별도 ADR로 조정한다.
 [.NET Standard 호환성](https://learn.microsoft.com/dotnet/standard/net-standard),
 [Framework 참조 어셈블리](https://learn.microsoft.com/dotnet/framework/migration-guide/reference-assemblies),
 [SDK 선택](https://learn.microsoft.com/dotnet/core/tools/global-json)을 기준으로 분리했다.
@@ -19,6 +22,10 @@ SDK는 10.0.100 baseline + latestFeature(10.0 SDK feature band 내 roll-forward)
 기존 xUnit v2/MSTest v3 후보는 신규 기반에 채택하지 않았다. 상용 UI/Chart library와 MVVM 패키지는 없다.
 
 ## 동일한 로컬·CI 검증 경로
+
+동일한 것은 명령/검증 경로이며 SDK/compiler·OS 환경 전체가 아니다.
+참조 검사는 허용 목록 밖의 방향만 차단한다. 허용된 참조를 제거해도 통과하며 최소 필수 참조 목록은 강제하지 않는다.
+Solution의 x86/x64 구성은 현재 Any CPU로 매핑된다. 실제 PlatformTarget별 빌드/실행 검증 증거가 아니며 필요 시 HC-401에서 분리한다.
 
 ```powershell
 ./scripts/verify-project-references.ps1
