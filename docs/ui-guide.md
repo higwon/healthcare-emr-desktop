@@ -45,3 +45,9 @@ DP/리소스/theme 변경·반복 탐색의 invalidation·구독·timer·callbac
 - 측정 환경과 미검증 조건을 적는다. 프로덕션 수준 목표와 실제 확인한 증거를 구분한다.
 
 예시 데이터·장애 제어는 Demo 도구에 둔다. 실제 제품 화면에 장식용 점수·가짜 AI 건강 판정·작동하지 않는 버튼을 넣지 않는다.
+
+## HC-103 탐색 Shell 디자인 제안
+
+새 탐색 시안·창/리소스/키보드/Automation 계약은 [exploration-shell-design](exploration-shell-design.md)를 검토한다.
+기본 client 1280×800, 최소 검토 1024×680과 새 색/간격 토큰은 제안이며 실제 WPF/DPI 확인 전 확정값이 아니다.
+이번 시안은 Overview/Timeline/Trend이며 기존 Medication 시안과 구분한다. 브라우저 확인은 WPF 품질 증거가 아니다.

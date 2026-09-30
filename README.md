@@ -8,8 +8,8 @@ WPF architecture, Custom Controls, 대량 데이터 표현, Client-Server 비동
 
 실행 기반: **HC-101 빌드·테스트·CI + HC-102 MVVM·명령·화면 수명**.
 [설계 PR #22](https://github.com/higwon/healthcare-emr-desktop/pull/22)와 HC-101을 병합했다.
-HC-102는 readiness API를 호출하는 개발 기반 화면과 열기/닫기·취소·재시도·안전한 진단을 구현한 리뷰 단계다.
-제품 UI·업무 기능은 후속 단계다. 기반 검증과 제품 품질 검증을 구분한다.
+HC-102는 [PR #25](https://github.com/higwon/healthcare-emr-desktop/pull/25)를 병합했다. readiness 조회·화면 열기/닫기·취소·재시도·안전한 진단을 검증했다.
+HC-103은 [탐색 Shell 설계안](docs/exploration-shell-design.md)과 [조작 시안](design/prototypes/health-explorer.html)을 검토하는 단계다. 제품 WPF UI·업무 기능은 아직 완료하지 않았다. 기반 검증과 제품 품질 검증을 구분한다.
 개발 환경·공통 명령은 [실행 가이드](docs/foundation-build.md), 구현 계약·검증 한계는 [HC-102](docs/mvvm-foundation.md)를 따른다.
 
 ## 제품 범위
