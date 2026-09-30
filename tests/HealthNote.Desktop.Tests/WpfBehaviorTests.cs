@@ -107,7 +107,12 @@ namespace HealthNote.Desktop.Tests
             using (DrawingContext drawing = visual.RenderOpen())
             {
                 drawing.DrawRectangle(Brushes.White, null, new Rect(0, 0, width, height));
-                drawing.DrawRectangle(new VisualBrush(content), null,
+                VisualBrush brush = new VisualBrush(content)
+                {
+                    ViewboxUnits = BrushMappingMode.Absolute,
+                    Viewbox = new Rect(0, 0, content.ActualWidth, content.ActualHeight)
+                };
+                drawing.DrawRectangle(brush, null,
                     new Rect(32, 32, content.ActualWidth, content.ActualHeight));
             }
 
