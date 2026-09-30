@@ -7,7 +7,16 @@ HC 숫자는 실행 순서가 아니다. 첫 기능 단계는 HC-104 → HC-301 
 
 ## 공통 UI 완료 조건
 
-각 UI Task는 실제 WPF 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation·Binding 오류·대량 데이터 query/layout/render·반복 탐색 수명 증거를 포함한다.
+Task에 영향을 받는 품질 항목만 검증한다. 변경하지 않은 화면·Control의 이전 증거는 재사용하고 영향/회귀 근거를 PR에 남긴다.
+
+| 종류 | 해당 Task | 완료 조건 |
+| --- | --- | --- |
+| MVVM / recovery 기반 | HC-102, HC-203 | command/state·취소/stale·구독/scope·실패/충돌/재시작 검증. 화면 변경 없는 PR에 DPI·대량 rendering 요구 없음 |
+| UI Foundation | HC-103 | DPI 100/150/200%·최소/기본 창·focus·Automation·Binding 오류 |
+| Data UI | HC-104 | UI Foundation + API paging/query/apply·대표 데이터 상태·detail 수명 |
+| Custom Control | HC-301, HC-302 | UI Foundation + 직접 fixture benchmark·Measure/Arrange·invalidation·hit test·profiling |
+| State Workflow UI | HC-204, HC-205 | 오류/retry/conflict·focus·관련 DPI·Binding·상태/명칭·닫기/재열기. Timeline benchmark 요구 없음 |
+| 앱 전체 | HC-401 | 전체 DPI/Windows/접근성·대량 데이터·장시간 실행 matrix 통합 재검증 |
 성능/메모리 자료는 [Case Study 기준](performance-case-studies.md)에 연결한다. HC-401은 전체 앱 재검증이며 최초 측정 단계가 아니다.
 필수 미검증 상태를 Done으로 표시하지 않는다.
 
@@ -69,7 +78,7 @@ Epic 완료: 모든 자식 AC·실제 검증·관련 PR merge 확인.
 수용 기준:
 
 - [ ] 정상·빈·로딩·실패·stale·unknown·선택/키보드 상태 정의
-- [ ] 각 UI Task의 DPI·Automation·Binding·대량 데이터 측정 기준 정의
+- [ ] Task 종류별 DPI·Automation·Binding·데이터/Control 측정 기준 정의
 - [ ] 시안과 실제 WPF 증거 구분·성능/메모리 Case Study 계획·Control 경계 정의
 
 ## HC-E02 WPF 기반·수명·디자인·진단
@@ -105,8 +114,7 @@ Epic 완료: 모든 자식 AC·실제 검증·관련 PR merge 확인.
 - [ ] 중복 실행·조회 취소·stale response·종료 후 callback 차단
 - [ ] event/static event/timer/CollectionChanged 해제·초기화 guard·Demo 설정 검증
 - [ ] 안전한 진단에 query/apply 타이밍·화면 scope 생존을 관찰할 경계 제공
-- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state 확인
-- [ ] Binding 오류 없음·대표 상태 캡처·대량 합성 데이터 query/layout/render 측정 및 반복 탐색 수명 증거
+
 
 ### HC-103 탐색 UI shell·리소스·접근성
 
@@ -121,8 +129,7 @@ Epic 완료: 모든 자식 AC·실제 검증·관련 PR merge 확인.
 - [ ] 정해진 최소/기본 창에서 wrap·selection·scroll 검증
 - [ ] Tab/Shift+Tab/Enter/Escape·초점 복귀·Automation 명칭
 - [ ] 대표 WPF 캡처·Binding 오류 검사; 실제 업무 write 없음
-- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state 확인
-- [ ] Binding 오류 없음·대표 상태 캡처·대량 합성 데이터 query/layout/render 측정 및 반복 탐색 수명 증거
+- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state·Binding 오류 확인
 
 ## HC-E03 Healthcare Data 탐색·Custom Controls
 
@@ -141,10 +148,10 @@ Epic 완료: 모든 자식 AC·실제 검증·관련 PR merge 확인.
 
 - [ ] Overview→Timeline→상세 탐색, 기간/타입/subject context·cursor ordering 계약 검증
 - [ ] Loading/Empty/Error/Stale·retry·취소·지연 순서 역전 시 선택/화면 보호
-- [ ] 100/1,000/10,000건 fixture·query/UI 적용 비용 baseline·반복 상세 scope 관찰
+- [ ] 100/1,000/10,000건 서버 fixture에서 pageSize≤100 실제 paging·페이지 단위 query/UI apply baseline·상세 scope 관찰. 100페이지 누적은 필수 아님
 - [ ] HC-301과 같은 첫 기능 단계에 자체 Control을 완성하며 기본 목록만으로 E03 종료하지 않음
-- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state 확인
-- [ ] Binding 오류 없음·대표 상태 캡처·대량 합성 데이터 query/layout/render 측정 및 반복 탐색 수명 증거
+- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation·Binding 오류·대표 상태 캡처
+- [ ] API pageSize≤100 통합 query/UI apply 측정·detail 반복 탐색 수명 확인; Control benchmark와 별도
 
 ### HC-301 Health Timeline Custom Control·초기 성능
 
@@ -158,10 +165,10 @@ Epic 완료: 모든 자식 AC·실제 검증·관련 PR merge 확인.
 
 - [ ] DP·템플릿·Measure/Arrange·선택/focus·hit testing·AutomationPeer 제공
 - [ ] query pagination과 UI 가상화 분리·실제 container recycling 동작 검증
-- [ ] 10,000건 합성 탐색의 scroll/layout/render 측정·원자료와 병목 가설 기록
+- [ ] Control benchmark는 API 없이 1,000/10,000 synthetic items 직접 공급·scroll/layout/render·원자료/가설 기록
 - [ ] 외부 UI library 없음·첫 기능 단계에서 실제 자체 Control 통합
-- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state 확인
-- [ ] Binding 오류 없음·대표 상태 캡처·대량 합성 데이터 query/layout/render 측정 및 반복 탐색 수명 증거
+- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation·Binding 오류
+- [ ] API 없이 1,000/10,000 fixture를 Control에 직접 공급하여 scroll/layout/render·container recycling 측정
 
 ### HC-302 Health Trend Custom Control·측정 시각화
 
@@ -176,9 +183,9 @@ Epic 완료: 모든 자식 AC·실제 검증·관련 PR merge 확인.
 - [ ] DP·Measure/Arrange·resize·hover·hit testing·keyboard selection·AutomationPeer 제공
 - [ ] 결측 gap·단위·점별 합성 참고 구간·원본 표·의료 판정 없음
 - [ ] 최대 10,000점 rendering/layout·선택·invalidation baseline, downsampling은 측정 후 결정
-- [ ] Timeline/Trend에서 발견한 실제 성능 문제 Case Study 자료 누적
-- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state 확인
-- [ ] Binding 오류 없음·대표 상태 캡처·대량 합성 데이터 query/layout/render 측정 및 반복 탐색 수명 증거
+- [ ] Timeline/Trend Performance Investigation의 가설·측정·결론·한계 누적, 발견된 병목은 최적화
+- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation·Binding 오류
+- [ ] 직접 공급한 1,000/10,000 point fixture의 layout/render·hover/selection·invalidation profiling
 
 ## HC-E04 Medication 상태 변경·실패 복구
 
@@ -226,8 +233,7 @@ Epic 완료: 모든 자식 AC·실제 검증·관련 PR merge 확인.
 - [ ] 저장 전 실패와 commit 후 응답 유실을 UI 상태에서 구분
 - [ ] 명시적 retry/restart 조회는 같은 ID를 유지·자동 replay/offline queue 없음
 - [ ] 409 자동 덮어쓰기 없음·unknown 중 동일 자원 write 차단
-- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state 확인
-- [ ] Binding 오류 없음·대표 상태 캡처·대량 합성 데이터 query/layout/render 측정 및 반복 탐색 수명 증거
+
 
 ### HC-204 WPF 직접 등록·일정·저장 흐름
 
@@ -242,8 +248,7 @@ Epic 완료: 모든 자식 AC·실제 검증·관련 PR merge 확인.
 - [ ] 모든 입력 검증·safe message·저장 중 상호 배제
 - [ ] 실패/응답 유실에도 초안 유지·명시적 재시도
 - [ ] 서버 확인 후 등록 반영·닫기/이전/초점·긴 이름 검증
-- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state 확인
-- [ ] Binding 오류 없음·대표 상태 캡처·대량 합성 데이터 query/layout/render 측정 및 반복 탐색 수명 증거
+- [ ] 오류/retry/conflict·focus·관련 화면 DPI 100/150/200%·Binding·Automation 상태·닫기/재열기 검증
 
 ### HC-205 날짜별 체크·취소·종료 및 통합 데모
 
@@ -258,12 +263,11 @@ Epic 완료: 모든 자식 AC·실제 검증·관련 PR merge 확인.
 - [ ] 미래/종료 항목 쓰기 차단·과거 조회/수정 정책 준수
 - [ ] 선택/날짜 변경 stale response 차단·동시 변경 처리
 - [ ] 등록→조회→체크/취소→종료→restart 데모 재현
-- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state 확인
-- [ ] Binding 오류 없음·대표 상태 캡처·대량 합성 데이터 query/layout/render 측정 및 반복 탐색 수명 증거
+- [ ] 오류/retry/conflict·focus·관련 화면 DPI 100/150/200%·Binding·Automation 상태·닫기/재열기 검증
 
 ## HC-E05 Windows 품질 재검증·배포·포트폴리오
 
-목표: 초기부터 누적한 증거를 앱 전체에서 재검증하고 실제 성능 2~3건·Memory Case Study 1건·설치/재현 자료로 정리한다.
+목표: 초기부터 누적한 증거를 앱 전체에서 재검증하고 Performance Investigation 2~3건·Memory Case Study 1건·설치/재현 자료로 정리한다.
 Epic 완료: 모든 자식 AC·실제 검증·관련 PR merge 확인.
 
 ### HC-401 앱 전체 Windows 품질 재검증·Case Study
@@ -277,11 +281,10 @@ Epic 완료: 모든 자식 AC·실제 검증·관련 PR merge 확인.
 수용 기준:
 
 - [ ] 각 UI Task에서 누적한 DPI/keyboard/Automation·Binding·대량 데이터 측정을 앱 전체에서 재검증
-- [ ] 실제 WPF 성능 문제 2~3건의 Problem/Hypothesis/Measurement/Root Cause/Solution/BeforeAfter·원자료
+- [ ] Performance Investigation 2~3건: 가설·측정·결론·한계·원자료. 병목 확인 시 Root Cause→Solution→Before/After, 미확인도 조사 결과로 기록
 - [ ] 실제 profiler Memory Case Study 1건: 반복 상세 열기/닫기·생존 VM/구독/timer/callback root 확인
 - [ ] 지원 환경·Release·seed·측정법·미해결 결과 기록; 가짜 숫자/의도적 결함 없음
-- [ ] 100/150/200% DPI·최소/기본 창·keyboard/focus·Automation name/role/state 확인
-- [ ] Binding 오류 없음·대표 상태 캡처·대량 합성 데이터 query/layout/render 측정 및 반복 탐색 수명 증거
+- [ ] 전체 DPI 100/150/200%·창/모니터·keyboard/Automation·Binding·대량 데이터·장시간 수명 matrix 재검증
 
 ### HC-402 설치·진단·재시작 복구·포트폴리오
 

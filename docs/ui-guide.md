@@ -30,8 +30,11 @@ Saving은 일시 busy, OutcomeUnknown은 작업 identity가 있는 복구 상태
 
 ## UI PR 증거
 
-아래는 각 UI Task의 Done 조건이다. HC-401은 첫 검사가 아니라 앱 전체 재검증이다.
-대량 합성 데이터에서 query 시간·UI 적용·scroll/selection·layout/render를 구분하고 baseline raw evidence를 [측정 기준](performance-case-studies.md)에 연결한다.
+아래는 품질 항목 목록이며 모두를 매 Task에 요구하지 않는다. [Task 종류별 적용표](epics-and-tasks.md)를 따른다.
+UI Foundation: DPI/focus/Automation/Binding. Data UI: 추가 paging/query/apply. Custom Control: 추가 직접 fixture·Measure/Arrange/invalidation/hit test/profiling.
+State Workflow UI: 오류/retry/conflict·focus·관련 DPI/Binding/Automation. 화면 변경 없는 HC-102/203은 state/lifetime/recovery 검증만.
+HC-401은 전체 matrix 재검증이다. 기존 증거 재사용 시 영향/회귀 근거를 남긴다.
+Data UI의 API paging/query/apply와 Control 직접 fixture의 scroll/layout/render를 구분하고 baseline raw evidence를 [측정 기준](performance-case-studies.md)에 연결한다.
 DP/리소스/theme 변경·반복 탐색의 invalidation·구독·timer·callback 수명도 확인한다. 미검증 필수 조건이 있으면 Task를 Done으로 표시하지 않는다.
 
 - 정상·빈·지연·실패·재시도·긴 이름·많은 항목·비활성 상태의 대표 캡처.

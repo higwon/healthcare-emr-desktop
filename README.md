@@ -34,8 +34,9 @@ WPF architecture, Custom Controls, 대량 데이터 표현, Client-Server 비동
 
 ## 측정 산출물
 
-실제 성능 문제 2~3건과 profiler 기반 Memory Case Study 1건을 목표로 한다.
-Problem → Hypothesis → Measurement → Root Cause → Solution → Before/After와 재현 자료를 남긴다.
+Performance Investigation 2~3건과 profiler 기반 Memory Case Study 1건을 목표로 한다.
+가설·측정·결론·한계를 기록하고 병목이 확인되면 Root Cause → Solution → Before/After를 남긴다.
+실제 최적화 사례 1건 이상은 목표이며 결함 발견 수를 완료 조건으로 강제하지 않는다.
 현재 결과는 **미측정**이다. 실제 측정 후 README에 해당 PR·환경·결과를 연결한다.
 
 문서의 정책은 자체 포트폴리오 설계다. 공개 서비스의 기능 사실은 출처가 있는 조사 문서로 구분한다.

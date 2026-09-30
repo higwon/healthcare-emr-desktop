@@ -64,4 +64,4 @@
 - operation key를 로그에 남길 수 있어도 의료 본문·약 이름·증상·token·원문 payload는 남기지 않는다. 개인정보 없는 allowlist 진단.
 - 테스트 이름은 상황_행동_결과. clock·ID·지연을 주입하고 Thread.Sleep에 의존하지 않는다.
 - 규칙·race·실패·중복·복구에 집중한다. getter/setter를 그대로 따라 쓰는 테스트나 허위 커버리지 목표를 만들지 않는다.
-- WPF 구현 PR은 100/150/200% DPI·최소 창·Automation·대량 데이터 layout/render 측정과 Binding 오류·실행·UI 캡처·키보드 검증을 포함한다. 컴파일만 통과했다고 UI 완료로 하지 않는다.
+- WPF 구현 PR은 Task 종류별 관련 품질 항목만 적용한다(ui-guide/epics-and-tasks). UI Foundation은 DPI/focus/Automation/Binding, Data UI는 paging/query/apply, Control은 직접 fixture profiling, Workflow UI는 실패/retry/conflict를 검증한다. 화면 변경 없는 기반 PR에 rendering benchmark를 요구하지 않는다. 컴파일만 통과했다고 UI 완료로 하지 않는다.

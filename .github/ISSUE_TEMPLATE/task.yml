@@ -18,7 +18,7 @@ body:
     id: acceptance
     attributes:
       label: 수용 기준
-      description: 확인 가능한 체크리스트를 작성합니다. UI Task는 DPI 100/150/200%, keyboard/Automation, Binding 오류, 대량 데이터 layout/render, 반복 탐색 수명 증거를 포함합니다.
+      description: 확인 가능한 체크리스트를 작성합니다. Task 성격별 관련 품질 AC만 적용합니다(ui-guide). API paging 통합과 Control 직접 fixture benchmark를 구분합니다.
     validations:
       required: true
   - type: textarea

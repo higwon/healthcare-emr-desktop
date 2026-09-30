@@ -44,7 +44,7 @@ HC 숫자는 기존 식별자를 보존한 것이며 실행 순서가 아니다.
 ## 검증·merge
 
 docs-only: diff·문서 링크·Task mapping·미확인 사실·source 범위 검사. 코드 테스트 성공을 꾸며 쓰지 않는다.
-code: Windows Release restore/build, 관련 자동 테스트, API 계약/실패 시나리오, UI PR이면 실제 WPF 100/150/200% DPI·최소 창·keyboard/Automation·Binding 오류·대량 데이터 layout/render·반복 탐색 수명 증거.
+code: Windows Release restore/build, 관련 자동 테스트, API 계약/실패 시나리오, UI PR이면 ui-guide/epics-and-tasks의 종류별 검증 범위를 적용한다. 변경한 화면·Control의 증거만 갱신하고 영향 없는 이전 증거는 근거를 남겨 재사용한다.
 [측정 기준](performance-case-studies.md)에 원자료를 연결하고 필수 미검증 상태에서는 Done으로 전환하지 않는다.
 CI 이름은 HC-101에서 `build-and-test`로 정의하고 TRX/coverage·UI evidence를 artifact로 보존한다. 임의 커버리지 % gate 없음.
 branch protection에 required check를 권장하되 사용자가 요청하기 전 repository security 설정을 바꾸지 않는다.

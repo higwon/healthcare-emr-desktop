@@ -41,7 +41,8 @@ drawing 경로·downsampling은 baseline 후 ADR-004에서 확정한다. 결측�
 ## 검증·미결정
 
 고정 seed/version의 100/1,000/10,000 events·최대 10,000 points, 긴 title·동일 시각·month boundary·결측 fixture.
-API/VM race·Control STA·실제 WPF DPI 100/150/200%·keyboard/Automation·최소 창·Binding 오류·query/layout/render 측정은 각 UI Task Done 조건.
+Data UI는 API pageSize≤100 paging/query/apply·상태를, Control은 API 없이 1,000/10,000 fixture를 직접 공급한 STA/layout/render benchmark를 검증한다.
+관련 UI/Control의 실제 WPF DPI 100/150/200%·keyboard/Automation·최소 창·Binding 검증은 Task 종류별로 적용한다. 통합에서 100페이지 누적은 필수 아님.
 반복 detail 열기/닫기·subject 변경·Loaded/Unloaded·late callback을 초기부터 재현한다. [측정 기준](performance-case-studies.md)을 따른다.
 미결정: 탐색 UI 승인 시안·최소 창 크기, 지원 Windows/모니터 matrix, 패키지/TFM 호환, profiler·성능 예산·downsampling.
 기존 복약 브라우저 시안은 탐색 UI 승인 증거가 아니다.

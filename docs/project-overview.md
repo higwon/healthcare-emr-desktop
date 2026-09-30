@@ -26,7 +26,7 @@ Overview·Timeline·Trend 조회가 우선이다. Blood Test, Health Checkup, Vi
 ## 완료 증거
 
 문서 링크 → Task → PR → 테스트/시각 검증 → 재현 데모를 추적한다.
-UI Task마다 지원 창 크기, 100/150/200% DPI, 키보드·Automation·Binding 오류·대량 데이터·layout/rendering 측정을 Done 조건에 포함한다.
-성능 Case Study 2~3건과 실제 profiler Memory Case Study 1건을 [측정 기준](performance-case-studies.md)에 따라 누적한다. 숫자를 미리 채우거나 결함을 일부러 넣지 않는다.
+Task 종류별 관련 UI 품질 조건만 Done에 포함한다. UI Foundation·Data UI·Custom Control·State Workflow UI를 구분하고 전체 matrix는 HC-401에서 재검증한다.
+Performance Investigation 2~3건과 실제 profiler Memory Case Study 1건을 [측정 기준](performance-case-studies.md)에 따라 누적한다. 숫자를 미리 채우거나 결함을 일부러 넣지 않는다.
 기능 완료와 실제 연동·운영 가능성·규제 적합성 주장을 분리한다.
 지금은 브라우저 UI 시안만 검증했다. WPF 빌드·실행·테스트 완료 상태가 아니다.
