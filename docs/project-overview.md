@@ -29,4 +29,4 @@ Overview·Timeline·Trend 조회가 우선이다. Blood Test, Health Checkup, Vi
 Task 종류별 관련 UI 품질 조건만 Done에 포함한다. UI Foundation·Data UI·Custom Control·State Workflow UI를 구분하고 전체 matrix는 HC-401에서 재검증한다.
 Performance Investigation 2~3건과 실제 profiler Memory Case Study 1건을 [측정 기준](performance-case-studies.md)에 따라 누적한다. 숫자를 미리 채우거나 결함을 일부러 넣지 않는다.
 기능 완료와 실제 연동·운영 가능성·규제 적합성 주장을 분리한다.
-지금은 브라우저 UI 시안만 검증했다. WPF 빌드·실행·테스트 완료 상태가 아니다.
+HC-101은 최소 WPF startup/STA와 readiness API·Release 기반을 검증한다. 기존 브라우저 시안과 startup smoke는 제품 UI·기능·DPI·성능 완료 증거가 아니다.

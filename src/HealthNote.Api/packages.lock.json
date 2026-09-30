@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "healthnote.application": {
+        "type": "Project",
+        "dependencies": {
+          "HealthNote.Domain": "[1.0.0, )"
+        }
+      },
+      "healthnote.domain": {
+        "type": "Project"
+      },
+      "healthnote.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "HealthNote.Application": "[1.0.0, )",
+          "HealthNote.Domain": "[1.0.0, )"
+        }
+      }
+    }
+  }
+}
