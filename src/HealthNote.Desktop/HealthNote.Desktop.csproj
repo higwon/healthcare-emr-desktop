@@ -6,6 +6,8 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="System.Net.Http" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <ProjectReference Include="../HealthNote.Application/HealthNote.Application.csproj" />
     <ProjectReference Include="../HealthNote.Domain/HealthNote.Domain.csproj" />
     <ProjectReference Include="../HealthNote.Infrastructure/HealthNote.Infrastructure.csproj" />

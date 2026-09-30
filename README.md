@@ -6,9 +6,11 @@ WPF architecture, Custom Controls, 대량 데이터 표현, Client-Server 비동
 성능·메모리/수명·DPI·접근성·진단·실패 복구를 설계·구현·측정 증거로 보여준다.
 특정 EMR 제품, 네이버 소비자 앱 또는 의료진 업무 시스템의 Clone을 목표로 하지 않는다.
 
-실행 기반: **HC-101 빌드·테스트·CI 구성**. [설계 PR #22](https://github.com/higwon/healthcare-emr-desktop/pull/22)를 병합했다.
-최소 WPF startup과 readiness API만 제공하며 제품 UI·업무 기능은 아직 없다. 기반 검증과 제품 품질 검증을 구분한다.
-개발 환경·명령·검증 한계는 [HC-101 실행 가이드](docs/foundation-build.md)를 따른다.
+실행 기반: **HC-101 빌드·테스트·CI + HC-102 MVVM·명령·화면 수명**.
+[설계 PR #22](https://github.com/higwon/healthcare-emr-desktop/pull/22)와 HC-101을 병합했다.
+HC-102는 readiness API를 호출하는 개발 기반 화면과 열기/닫기·취소·재시도·안전한 진단을 구현한 리뷰 단계다.
+제품 UI·업무 기능은 후속 단계다. 기반 검증과 제품 품질 검증을 구분한다.
+개발 환경·공통 명령은 [실행 가이드](docs/foundation-build.md), 구현 계약·검증 한계는 [HC-102](docs/mvvm-foundation.md)를 따른다.
 
 ## 제품 범위
 

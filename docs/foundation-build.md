@@ -6,7 +6,7 @@
 ## 구성·선행조건
 
 Desktop net48 WPF, Domain/Application/Infrastructure netstandard2.0, API net10.0, Desktop.Tests net48.
-공유 계층은 현재 빈 assembly다. 기능/DTO/VM skeleton을 미리 추가하지 않는다.
+HC-101 시점 공유 계층은 빈 assembly였다. HC-102에서 실제 readiness query port/adapter와 MVVM을 추가했다. 현재 구현과 검증은 [HC-102](mvvm-foundation.md)를 따른다.
 Windows와 .NET 10 SDK, .NET Framework 4.8 호환 런타임이 필요하다. Visual Studio는 .NET 10 SDK 지원 버전을 사용한다.
 SDK는 10.0.100 baseline + latestFeature(10.0 내 feature band 간 roll-forward), CI 설치는 10.0.x.
 패키지는 lockfile로 고정하지만 SDK/compiler 환경까지 동일하게 고정한 reproducible build는 아니다.
@@ -19,7 +19,7 @@ SDK는 10.0.100 baseline + latestFeature(10.0 내 feature band 간 roll-forward)
 
 테스트 runner는 [MSTest 4.4.1](https://www.nuget.org/packages/MSTest.TestFramework/4.4.1)·동일 Adapter,
 [Test SDK 18.10.1](https://www.nuget.org/packages/Microsoft.NET.Test.Sdk/18.10.1)을 net48에서 확인한다.
-기존 xUnit v2/MSTest v3 후보는 신규 기반에 채택하지 않았다. 상용 UI/Chart library와 MVVM 패키지는 없다.
+기존 xUnit v2/MSTest v3 후보는 신규 기반에 채택하지 않았다. HC-101 시점 상용 UI/Chart library와 MVVM 패키지는 없었다. HC-102 MVVM 선택은 ADR-002를 따른다.
 
 ## 동일한 로컬·CI 검증 경로
 
@@ -50,7 +50,7 @@ dotnet ./src/HealthNote.Api/bin/Release/net10.0/HealthNote.Api.dll
 API는 http://127.0.0.1:5078 에서 /api/v1/health만 제공한다. 업무 조회·쓰기·DB·외부 연동 없음.
 smoke 스크립트는 포트가 이미 사용 중이면 실패하고 기존 프로세스를 종료하지 않는다. 자체 시작한 프로세스만 정리한다.
 Desktop --smoke는 눈에 보이는 제품 검토가 아닌 자동 startup 경로다. 투명/비활성 Window의 ContentRendered 뒤 0으로 종료하며 10초 watchdog는 실패로 종료한다.
-현재 중앙 텍스트 Window는 실행 확인용이며 제품 UI는 HC-103에서 시안 검토 후 구현한다.
+HC-101 중앙 텍스트 Window는 HC-102의 연결/명령/수명 개발 화면으로 교체됐다. 제품 UI는 HC-103에서 시안 검토 후 구현한다.
 
 ## 실제 로컬 결과·한계
 
@@ -62,4 +62,4 @@ Windows 11 build 26200, SDK 10.0.300, x64 환경:
 - 첫 STA 검사는 표시되지 않은 Window의 ActualWidth=0으로 실패했다. Window 크기를 억지로 기대하지 않고 compiled content root를 layout하도록 수정 후 통과.
 - clean checkout remote CI 결과는 HC-101 PR checks와 artifact에서 확인한다. 로컬 성공만으로 CI 성공을 주장하지 않는다.
 
-제품 UI·MVVM·DPI·키보드·접근성·성능·메모리 조사·설치 검증은 해당 후속 Task의 증거가 필요하다. startup smoke는 이를 대신하지 않는다.
+위 결과는 HC-101 당시 증거다. MVVM은 HC-102 증거를 따른다. 제품 UI·DPI·키보드·접근성·성능·메모리 조사·설치는 해당 후속 Task의 증거가 필요하다. startup smoke는 이를 대신하지 않는다.

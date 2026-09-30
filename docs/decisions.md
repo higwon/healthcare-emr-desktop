@@ -16,11 +16,26 @@ MSTest 선택 근거·소스·재현 명령은 [실행 가이드](foundation-bui
 
 ## ADR-002 MVVM과 UI 라이브러리
 
-제안: 기본 WPF + 자체 ResourceDictionary/Control, CommunityToolkit.Mvvm의 net48 호환 버전 후보.
-상용 대형 UI library에 의존하지 않는다. Toolkit은 MVVM 기반 코드 도구이며 제품 UI 구현을 대신하지 않는다.
-검증: 호환 TFM·C# generator·command 취소·예외·CI 검증. generator가 맞지 않으면 라이브러리 command/ObservableObject 또는 최소 수동 기반을 선택한다.
-수동 AsyncCommand를 고르더라도 예외 처리·CanExecute·취소·중복 실행·수명 테스트를 먼저 둔다.
-대안과 선택 패키지 버전은 호환성 spike 이후 기록한다. 이전 POS 패키지 규칙을 그대로 복사하지 않는다.
+확정(HC-102): 기본 WPF + 자체 ResourceDictionary/Control 방향을 유지하고,
+CommunityToolkit.Mvvm **8.4.2**의 ObservableObject/RelayCommand/AsyncRelayCommand를 직접 사용한다.
+generator·global Ioc·messenger·범용 BaseViewModel은 이번 단계에서 사용하지 않는다.
+Toolkit은 MVVM 코드 도구이며 제품 UI 구현을 대신하지 않는다.
+
+선택 이유: 검증된 notification/command 구현을 재사용하면서 별도 MVVM framework를 만들지 않는다.
+수동 composition root에서 실제 readiness query·Shell·화면 수명을 연결한다.
+현재의 navigation은 Shell의 화면 열기/닫기이며 INavigationService/IDialogService/IDiagnostics facade는 없다.
+IUiDispatcher는 실제 background 응답의 UI apply를 위해 단일 메서드로 도입했다.
+예외/중복 실행/취소/stale/Disposed guard는 라이브러리에 맡겼다고 가정하지 않고 ViewModel 상태 테스트로 검증한다.
+AllowConcurrentExecutions의 이유와 UI thread 소유 계약은 [HC-102 구현 계약](mvvm-foundation.md)에 기록했다.
+
+netstandard2.0 자산과 전이 의존성(Microsoft.Bcl.AsyncInterfaces 10.0.1 등)을 lockfile에 고정했다.
+전이 패키지 버전은 Desktop runtime을 .NET 10으로 바꾼다는 의미가 아니다.
+로컬 net48 Release build(경고 0·오류 0), 실제 net48 테스트 34개, compiled executable startup으로 호환성을 확인했다.
+원격 Windows CI는 HC-102 PR checks에서 별도로 확인한다. generator 호환성을 검증한 것으로 확대하지 않는다.
+대안: 최소 수동 command는 의존성을 줄이지만 실행/notification semantics를 직접 유지해야 한다.
+UI 품질·Control은 HC-103/301/302에서 WPF 자체 구현으로 증명한다.
+[공식 패키지/TFM](https://www.nuget.org/packages/CommunityToolkit.Mvvm/8.4.2),
+[공식 async command 동작](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/mvvm/asyncrelaycommand).
 
 ## ADR-003 서버 영속성과 재시도
 
