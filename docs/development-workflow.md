@@ -1,7 +1,7 @@
 # 저장소·이슈·PR 운영
 
 범위 source of truth는 epics-and-tasks.md, 운영 상태는 GitHub issue다. 문서에 상세 진행 로그를 중복해서 쌓지 않는다.
-사용자가 명시한 설계 우선 요구에 따라 설계 기준 PR 검토 이전 기능 구현은 보류한다.
+설계 기준 PR #22를 검토·병합했다. 이후 Task 종류별 AC를 충족하는 작은 구현 PR로 진행한다.
 
 ## 상태와 진입 기준
 
@@ -23,7 +23,7 @@ force push·history rewrite·보호 규칙 변경·자동 merge는 요청 없으
 
 | 순서 | Task/PR | 포함 범위 | 선행 조건 |
 | --- | --- | --- | --- |
-| Design baseline | HC-001~004 / PR #22 Draft | 설계·계약·규칙·Task만 | 설계 리뷰 |
+| Design baseline | HC-001~004 / PR #22 merged | 설계·계약·규칙·Task만 | 설계 리뷰 |
 | 구현 PR 1 | HC-101 / Solution·Windows CI | 프로젝트/참조·TFM 검증·Release build/test·최소 실행, 기능 없음 | 기준 검토·ADR 선택 |
 | 구현 PR 2 | HC-102 / MVVM·수명·진단 | 분리 VM·DI·취소/generation·오류·구독/해제·안전한 진단 | HC-101 |
 | 구현 PR 3 | HC-103 / 탐색 shell·리소스 | 탐색 host·focus/Automation·DPI·layout baseline, write 없음 | HC-004, HC-102·탐색 UI 시안 검토 |
@@ -46,6 +46,6 @@ HC 숫자는 기존 식별자를 보존한 것이며 실행 순서가 아니다.
 docs-only: diff·문서 링크·Task mapping·미확인 사실·source 범위 검사. 코드 테스트 성공을 꾸며 쓰지 않는다.
 code: Windows Release restore/build, 관련 자동 테스트, API 계약/실패 시나리오, UI PR이면 ui-guide/epics-and-tasks의 종류별 검증 범위를 적용한다. 변경한 화면·Control의 증거만 갱신하고 영향 없는 이전 증거는 근거를 남겨 재사용한다.
 [측정 기준](performance-case-studies.md)에 원자료를 연결하고 필수 미검증 상태에서는 Done으로 전환하지 않는다.
-CI 이름은 HC-101에서 `build-and-test`로 정의하고 TRX/coverage·UI evidence를 artifact로 보존한다. 임의 커버리지 % gate 없음.
+CI 이름은 HC-101에서 `build-and-test`로 정의하고 TRX·해당 UI evidence(coverage는 의미 있는 업무 테스트 도입 후)를 artifact로 보존한다. 임의 커버리지 % gate 없음.
 branch protection에 required check를 권장하되 사용자가 요청하기 전 repository security 설정을 바꾸지 않는다.
 Draft → checks·설명·증거 완료 → review. merge는 저장소 소유자 결정 또는 명시적 위임에 따른다.

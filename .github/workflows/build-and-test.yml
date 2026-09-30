@@ -1,0 +1,40 @@
+name: build-and-test
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+      - name: Project reference boundaries
+        shell: pwsh
+        run: ./scripts/verify-project-references.ps1
+      - name: Restore locked dependencies
+        run: dotnet restore HealthNote.sln --locked-mode
+      - name: Release build
+        run: dotnet build HealthNote.sln -c Release --no-restore
+      - name: net48 STA and application startup tests
+        run: dotnet test tests/HealthNote.Desktop.Tests/HealthNote.Desktop.Tests.csproj -c Release --no-build --logger "trx;LogFileName=desktop.trx" --results-directory artifacts/test-results
+      - name: API readiness smoke
+        shell: pwsh
+        run: ./scripts/smoke-api.ps1
+      - name: Publish demo API
+        run: dotnet publish src/HealthNote.Api/HealthNote.Api.csproj -c Release --no-build -o artifacts/api
+      - name: Evidence and binaries
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-foundation
+          path: |
+            artifacts/
+            src/HealthNote.Desktop/bin/Release/net48/
+          if-no-files-found: warn

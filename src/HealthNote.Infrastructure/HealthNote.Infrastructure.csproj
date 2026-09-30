@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>netstandard2.0</TargetFramework></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../HealthNote.Application/HealthNote.Application.csproj" />
+    <ProjectReference Include="../HealthNote.Domain/HealthNote.Domain.csproj" />
+  </ItemGroup>
+</Project>

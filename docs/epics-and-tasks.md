@@ -2,7 +2,7 @@
 
 2026-09-30 리뷰 반영. 구현 범위의 source of truth, 실제 진행 상태는 GitHub issue다.
 기존 5 Epic/16 Task의 ID·URL을 보존하고 HC-104 조회 작업 하나만 추가했다. 현재 5 Epic/17 Task.
-E01은 Review, 나머지는 Backlog. 생성/문서 작성만으로 Done이 아니다. Ready/Done은 development-workflow를 따른다.
+E01은 PR #22 병합으로 Done이다. HC-101 이후 각 Task의 진행·검증·병합 상태는 GitHub issue와 PR을 따른다. 생성/문서 작성만으로 Done이 아니다. Ready/Done은 development-workflow를 따른다.
 HC 숫자는 실행 순서가 아니다. 첫 기능 단계는 HC-104 → HC-301 → HC-302이며 Medication보다 먼저다.
 
 ## 공통 UI 완료 조건
