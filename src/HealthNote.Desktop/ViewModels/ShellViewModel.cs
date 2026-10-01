@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -85,7 +86,7 @@ namespace HealthNote.Desktop.ViewModels
                 Timeline.Type = "전체";
                 Timeline.Search = string.Empty;
                 Timeline.State = "정상";
-                Timeline.Selected = record;
+                Timeline.Selected = Timeline.Records.FirstOrDefault(item => item.Id == record.Id);
             }
         }
 

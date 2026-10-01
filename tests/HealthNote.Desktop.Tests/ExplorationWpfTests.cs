@@ -104,6 +104,51 @@ namespace HealthNote.Desktop.Tests
         }
 
         [STATestMethod]
+        public void OverviewRecord_ResolvesListSelectionPeerAndDetailFocusReturn()
+        {
+            using (ShellViewModel shell = ExplorationPreviewTests.CreateShell())
+            {
+                MainWindow window = new MainWindow(shell);
+                try
+                {
+                    window.Show();
+                    window.Activate();
+                    shell.Timeline.Type = "증상";
+                    shell.Timeline.Search = "검색 결과 없음";
+                    shell.Timeline.State = "조회 실패";
+                    var record = shell.Overview.RecentRecords[0];
+                    shell.Overview.OpenRecordCommand.Execute(record);
+                    window.UpdateLayout();
+                    TimelineView view = Children<TimelineView>(window).Single();
+                    ListBox list = (ListBox)view.FindName("RecordList");
+                    var expected = shell.Timeline.Records.Single(r => r.Id == record.Id);
+                    Assert.AreSame(expected, list.SelectedItem);
+                    Assert.AreSame(expected, shell.Timeline.Selected);
+                    Assert.IsTrue(shell.Timeline.DetailOpen);
+                    list.ScrollIntoView(expected);
+                    window.UpdateLayout();
+                    var item = (ListBoxItem)list.ItemContainerGenerator.ContainerFromItem(expected);
+                    Assert.IsNotNull(item);
+                    var peer = new ListBoxAutomationPeer(list).GetChildren().Single(p => p.GetName() == expected.AccessibleName);
+                    Assert.IsTrue(((ISelectionItemProvider)peer.GetPattern(PatternInterface.SelectionItem)).IsSelected);
+                    Button close = (Button)view.FindName("CloseDetail");
+                    close.Focus();
+                    RaiseKey((UIElement)view.FindName("DetailSurface"), Key.Escape);
+                    Assert.IsTrue(item.IsKeyboardFocused);
+                    Assert.IsTrue(shell.Timeline.DetailOpen);
+                    close.Focus();
+                    close.Command.Execute(null);
+                    close.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    window.UpdateLayout();
+                    Assert.IsFalse(shell.Timeline.DetailOpen);
+                    Assert.AreSame(expected, list.SelectedItem);
+                    Assert.IsTrue(item.IsKeyboardFocused);
+                }
+                finally { window.Close(); }
+            }
+        }
+
+        [STATestMethod]
         public void TimelineEnterEscapeAndClose_ReturnFocusToSelectedItem()
         {
             using (ShellViewModel shell = ExplorationPreviewTests.CreateShell())

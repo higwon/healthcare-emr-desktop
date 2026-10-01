@@ -4,7 +4,7 @@
 실제 Windows 11 build 26200 / 200% (192 DPI) 환경에서 표시한 net48 WPF Window의 content를 RenderTargetBitmap으로 캡처했다.
 OS desktop/chrome screenshot, 브라우저 시안, bitmap 배율로 만든 DPI 검증 이미지가 아니다.
 각 TXT의 build/source version, 실제 Visual DPI, client/outer/screen/work-area 크기를 확인한다.
-뒤의 문서/evidence commit은 실행 코드를 변경하지 않는다. CI의 별도 캡처는 artifacts에서 환경을 확인한다.
+최초 후속 문서/evidence commit은 실행 코드를 변경하지 않았다. 이후 독립 리뷰의 Overview→Timeline selection 수정은 새 실행 코드 변경이다. 이 캡처는 당시 화면의 증거이며 수정 후 탐색/초점 동작 검증은 WPF 회귀 테스트와 최신 PR CI를 따른다. CI의 별도 캡처는 artifacts에서 환경을 확인한다.
 
 기본 outer 1280×800 / client 1267×764.5 DIP.
 최소 outer 720×520 / client 707×484.5 DIP.

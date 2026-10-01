@@ -17,6 +17,7 @@ namespace HealthNote.Desktop.Tests
                 shell.Overview.OpenRecordCommand.Execute(record);
                 Assert.AreSame(shell.Timeline, shell.ActiveScreen);
                 Assert.AreEqual(record.Id, shell.Timeline.Selected?.Id);
+                Assert.AreSame(shell.Timeline.Records.Single(r => r.Id == record.Id), shell.Timeline.Selected);
                 Assert.IsTrue(shell.Timeline.DetailOpen);
                 shell.Overview.OpenTrendCommand.Execute(null);
                 Assert.AreSame(shell.Trend, shell.ActiveScreen);

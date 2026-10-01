@@ -30,7 +30,7 @@ Overview는 좁아지면 최근 기록/최근 측정 패널을 세로 배치한�
 
 2026-10-01, Windows 11 build 26200, CLR 4.0.30319.42000, SDK 10.0.300, Release.
 캡처 실행 소스 commit: `71ad371142f9c4c37bf00f9d1dec93551072ce94`.
-이후 evidence/documentation commit에는 실행 코드 변경이 없다.
+이 캡처 이후 최초 evidence/documentation commit에는 실행 코드 변경이 없었다. 아래 독립 리뷰 수정은 후속 실행 코드 변경이며 기존 캡처를 수정 후 탐색 검증 증거로 재사용하지 않는다.
 
 | 항목 | 실제 결과 / 한계 |
 | --- | --- |
@@ -69,3 +69,13 @@ Windows CI는 기존 locked restore, Release build, net48 tests, API smoke, publ
 - Medication/persistence/server write/AI/Dark theme는 이번 범위가 아니다.
 
 HC-103은 위 필수 품질 검증 및 사용자 PR 검토/merge 전까지 Done으로 처리하지 않는다.
+
+## 독립 리뷰 P2 수정 — Overview → Timeline selection
+
+리뷰 head `adb0298bc13a6a5d7ba33ab58407ae70bd79b4f8`에서 Overview fixture 객체와 Timeline fixture 객체가 같은 ID여도 다른 instance였다. 직접 Selected에 넣으면 실제 WPF ListBox.SelectedItem은 null이고 상세만 열렸다.
+기존 VM ID 비교 테스트를 실제 collection instance 비교로 강화하고 실제 STA Window 회귀 테스트를 추가했다. 수정 전 두 테스트 모두 실패했으며 WPF 테스트는 ListBox.SelectedItem=null을 재현했다.
+
+Shell은 필터/검색/상태 초기화 후 현재 Timeline.Records에서 동일 ID의 실제 항목을 찾아 선택한다. 값 동등성이나 UI 전용 peer를 새로 도입하지 않았다.
+새 WPF 테스트는 Overview command → 실제 ListBox 선택 → 기본 peer의 IsSelected → Escape 원래 행 초점 → 닫기 후 동일 행 선택/초점 유지를 확인한다.
+수정 후 실제 net48 **49 passed / 0 failed / 0 skipped**, Release 경고·오류 0, 참조 경계/locked restore/API smoke/publish 통과.
+신규 회귀 검증은 WPF routed input이며 OS 키 주입/물리 keyboard matrix로 표현하지 않는다. 기존 DPI/High Contrast 미검증 한계와 HC-103 OPEN 상태는 유지한다.
