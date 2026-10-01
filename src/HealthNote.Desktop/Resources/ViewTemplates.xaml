@@ -1,0 +1,11 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:vm="clr-namespace:HealthNote.Desktop.ViewModels" xmlns:views="clr-namespace:HealthNote.Desktop.Views">
+    <DataTemplate DataType="{x:Type vm:OverviewPreviewViewModel}">
+        <views:OverviewView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:TimelinePreviewViewModel}">
+        <views:TimelineView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:TrendPreviewViewModel}">
+        <views:TrendView />
+    </DataTemplate>
+</ResourceDictionary>

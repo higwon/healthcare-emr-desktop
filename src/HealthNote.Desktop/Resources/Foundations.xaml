@@ -1,0 +1,10 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:Double x:Key="BodyFontSize">14</sys:Double>
+    <sys:Double x:Key="CaptionFontSize">12</sys:Double>
+    <sys:Double x:Key="TitleFontSize">26</sys:Double>
+    <sys:Double x:Key="SectionFontSize">17</sys:Double>
+    <Thickness x:Key="PagePadding">24</Thickness>
+    <Thickness x:Key="CardPadding">20</Thickness>
+    <Thickness x:Key="InputPadding">10,7</Thickness>
+    <CornerRadius x:Key="SurfaceRadius">10</CornerRadius>
+</ResourceDictionary>

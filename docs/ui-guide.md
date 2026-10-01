@@ -51,3 +51,8 @@ DP/리소스/theme 변경·반복 탐색의 invalidation·구독·timer·callbac
 새 탐색 시안·창/리소스/키보드/Automation 계약은 [exploration-shell-design](exploration-shell-design.md)를 검토한다.
 기본 client 1280×800, 작은 디자인 검토 영역 1024×680과 새 색/간격 토큰은 제안이다. 1024×680을 Window.MinWidth/MinHeight로 그대로 적용하지 않는다. 실제 Windows 작업 영역과 100/150/200% DPI에서 최소 크기·초기 크기·reflow를 결정한다.
 이번 시안은 Overview/Timeline/Trend이며 기존 Medication 시안과 구분한다. 브라우저 확인은 WPF 품질 증거가 아니다.
+
+## HC-103 Native WPF 구현 기록
+
+승인된 디자인 PR #26 이후 구현 계약·work-area sizing 정책·실제 200% DPI 결과·keyboard/Automation/Binding 검증과 한계는 [wpf-shell-foundation](wpf-shell-foundation.md)을 따른다.
+대표 native WPF content render 7장과 환경은 [evidence](../design/evidence/hc103-wpf/README.md)에 있다. 실제 100/150% DPI와 High Contrast 등 필수 미검증 조건이 남아 HC-103은 OPEN이다.

@@ -33,16 +33,17 @@ namespace HealthNote.Desktop.Tests
                 MainWindow window = new MainWindow(shell) { ShowInTaskbar = false, ShowActivated = false };
                 try
                 {
+                    ((Expander)window.FindName("ConnectionTools")).IsExpanded = true;
                     window.Show();
                     window.UpdateLayout();
                     List<Button> buttons = FindChildren<Button>(window);
-                    Assert.HasCount(4, buttons);
+                    Assert.IsTrue(buttons.Exists(button => button.Content as string == "연결 확인"));
                     Assert.IsTrue(buttons.TrueForAll(button => button.Command != null));
                     Assert.IsTrue(FindChildren<TextBlock>(window).Exists(text => text.Text == "데모 서버에 연결됐어요."));
                     shell.CloseConnectionCommand.Execute(null);
                     WpfTestPump.Until(shell.OpenConnectionCommand.ExecuteAsync(null));
                     window.UpdateLayout();
-                    SaveEngineeringCapture(window);
+
                     listener.Flush();
                     Assert.AreEqual(string.Empty, output.ToString(), "Compiled bindings emitted WPF errors.");
                 }
@@ -95,36 +96,6 @@ namespace HealthNote.Desktop.Tests
             return matches;
         }
 
-        private static void SaveEngineeringCapture(Window window)
-        {
-            // Engineering evidence only; HC-103 owns the product UI design.
-            string directory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../artifacts/ui"));
-            Directory.CreateDirectory(directory);
-            FrameworkElement content = (FrameworkElement)window.Content;
-            int width = (int)Math.Ceiling(content.ActualWidth) + 64;
-            int height = (int)Math.Ceiling(content.ActualHeight) + 64;
-            DrawingVisual visual = new DrawingVisual();
-            using (DrawingContext drawing = visual.RenderOpen())
-            {
-                drawing.DrawRectangle(Brushes.White, null, new Rect(0, 0, width, height));
-                VisualBrush brush = new VisualBrush(content)
-                {
-                    ViewboxUnits = BrushMappingMode.Absolute,
-                    Viewbox = new Rect(0, 0, content.ActualWidth, content.ActualHeight)
-                };
-                drawing.DrawRectangle(brush, null,
-                    new Rect(32, 32, content.ActualWidth, content.ActualHeight));
-            }
-
-            RenderTargetBitmap bitmap = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
-            bitmap.Render(visual);
-            PngBitmapEncoder encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(bitmap));
-            using (FileStream stream = File.Create(Path.Combine(directory, "hc102-shell.png")))
-            {
-                encoder.Save(stream);
-            }
-        }
     }
 
     internal static class WpfTestPump

@@ -1,0 +1,11 @@
+Native WPF content render; not an OS desktop screenshot or a multi-DPI matrix.
+OS: Microsoft Windows NT 10.0.26200.0
+Runtime: 4.0.30319.42000
+Build: Release / 1.0.0+71ad371142f9c4c37bf00f9d1dec93551072ce94
+DPI: 192 x 192
+Client DIP: 707 x 484.5
+Window DIP: 720 x 520
+Screen DIP: 1920 x 1080
+System work area DIP: 0,0,1920,1032
+Current monitor usable DIP: 1920,1032
+High Contrast OS: False

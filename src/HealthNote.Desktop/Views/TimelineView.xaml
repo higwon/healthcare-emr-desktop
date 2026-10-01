@@ -1,0 +1,94 @@
+<UserControl x:Class="HealthNote.Desktop.Views.TimelineView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" AutomationProperties.Name="기록 탐색" SizeChanged="OnSizeChanged">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanVisibility" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel x:Name="ScreenHeading" Margin="0,0,0,16">
+            <TextBlock Text="기록 탐색" FontSize="{DynamicResource TitleFontSize}" FontWeight="SemiBold" />
+            <TextBlock Text="기간과 유형으로 기록을 찾고, 선택한 기록의 출처를 확인해요." Style="{DynamicResource Caption}" Margin="0,6,0,0" />
+        </StackPanel>
+        <Grid Grid.Row="1" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock Text="기록 유형" Style="{DynamicResource Caption}" Margin="0,0,0,4" />
+                <ComboBox x:Name="TypeFilter" ItemsSource="{Binding Types}" SelectedItem="{Binding Type, Mode=TwoWay}" AutomationProperties.Name="기록 유형" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                <TextBlock Text="화면 내 기록 찾기" Style="{DynamicResource Caption}" Margin="0,0,0,4" />
+                <TextBox x:Name="SearchInput" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="화면 내 기록 찾기" />
+            </StackPanel>
+        </Grid>
+        <StackPanel Grid.Row="2" Margin="0,0,0,12">
+            <TextBlock Text="{Binding ResultContext}" Style="{DynamicResource Caption}" />
+            <TextBlock Visibility="{Binding HasNotice, Converter={StaticResource BooleanVisibility}}" Text="{Binding Notice}" Margin="0,6" AutomationProperties.Name="기록 표시 상태">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsError}" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource ErrorBrush}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="다시 시도" Command="{Binding RetryCommand}" Visibility="{Binding IsError, Converter={StaticResource BooleanVisibility}}" />
+                <Button Content="조회 취소" Command="{Binding CancelCommand}" Visibility="{Binding IsLoading, Converter={StaticResource BooleanVisibility}}" />
+            </StackPanel>
+        </StackPanel>
+        <Grid x:Name="MasterDetail" Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="ListColumn" Width="*" />
+                <ColumnDefinition x:Name="DetailColumn" Width="340" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition x:Name="ListRow" Height="*" />
+                <RowDefinition x:Name="DetailRow" Height="0" />
+            </Grid.RowDefinitions>
+            <Border x:Name="ListSurface" Style="{DynamicResource Surface}" Padding="8">
+                <ListBox x:Name="RecordList" ItemsSource="{Binding Records}" SelectedItem="{Binding Selected, Mode=TwoWay}" PreviewKeyDown="OnListKeyDown" SelectionChanged="OnSelectionChanged" AutomationProperties.Name="건강 기록 목록" ItemContainerStyle="{DynamicResource RecordItemStyle}" AutomationProperties.AutomationId="TimelineRecords">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Text="{Binding Type}" Style="{DynamicResource Caption}" />
+                                <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Text="{Binding Title}" TextWrapping="Wrap" FontWeight="SemiBold" Margin="0,4" />
+                                <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Text="{Binding Summary}" Style="{DynamicResource Caption}" />
+                                <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Text="{Binding Date}" Style="{DynamicResource Caption}" Margin="0,6,0,0" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Border>
+            <Border x:Name="DetailSurface" Grid.Column="1" Style="{DynamicResource Surface}" Margin="16,0,0,0" Visibility="{Binding DetailOpen, Converter={StaticResource BooleanVisibility}}" IsVisibleChanged="OnDetailVisibilityChanged" PreviewKeyDown="OnDetailKeyDown">
+                <ScrollViewer Focusable="False" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <DockPanel>
+                            <Button x:Name="CloseDetail" DockPanel.Dock="Right" Content="닫기" Command="{Binding CloseDetailCommand}" Click="OnCloseDetail" AutomationProperties.Name="기록 상세 닫고 목록으로 돌아가기" />
+                            <TextBlock Text="기록 상세" Style="{DynamicResource SectionTitle}" />
+                        </DockPanel>
+                        <StackPanel DataContext="{Binding Selected}" Margin="0,16,0,0">
+                            <TextBlock Text="{Binding Type}" Foreground="{DynamicResource AccentBrush}" />
+                            <TextBlock Text="{Binding Title}" FontSize="20" FontWeight="SemiBold" Margin="0,8,0,20" />
+                            <TextBlock Text="기록 날짜" Style="{DynamicResource Caption}" />
+                            <TextBlock Text="{Binding Date}" Margin="0,4,0,16" />
+                            <TextBlock Text="출처" Style="{DynamicResource Caption}" />
+                            <TextBlock Text="{Binding Source}" Margin="0,4,0,16" />
+                            <TextBlock Text="요약" Style="{DynamicResource Caption}" />
+                            <TextBlock Text="{Binding Summary}" Margin="0,4,0,16" />
+                        </StackPanel>
+                        <TextBlock Text="이 기록은 합성 데모 자료입니다. 기록 날짜와 출처를 함께 확인해 주세요." Style="{DynamicResource Caption}" />
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>
