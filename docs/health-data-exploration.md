@@ -1,3 +1,5 @@
+> 2026-10-01 목표 변경: 현재 제품 범위·도메인·API·실행 우선순위는 [EMR MVP](emr-mvp.md)가 우선한다. 아래 탐색/복약 계획은 이전 기준이며 후속 구현을 바로 진행하지 않는다. 남은 Windows 품질 검증은 미검증 기록으로 보존하고 EMR 구현과 병행/후속 처리한다.
+
 # Healthcare Data 탐색 명세
 
 2026-09-30. 자체 합성 데이터 engineering scenario다. 첫 기능 단계(E03)는 Overview → Timeline → 상세 → Trend 흐름이다.

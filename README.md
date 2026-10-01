@@ -1,3 +1,10 @@
+# WPF EMR · RESTful API Portfolio
+
+2026-10-01 사용자 목표 변경: **환자 조회 → 진료 이력 → 진료 기록 작성·저장**을 실제 RESTful API로 연결하고 테스트한다.
+현재 범위/계약/개발 순서는 [EMR MVP](docs/emr-mvp.md)를 따른다. 기존 WPF/MVVM/CI 기반을 활용하고 Timeline/Trend custom control과 복약 계획은 보류한다. DPI·접근성 미검증 항목은 별도로 남기며 다음 EMR 구현을 차단하지 않는다.
+
+아래 내용은 이전 Healthcare Client 목표와 개발 이력이다. 현재 목표에서 EMR을 제외한다는 의미로 사용하지 않는다.
+
 # Healthcare EMR Desktop · 건강노트
 
 Healthcare Data를 탐색하고 관리하는 장시간 실행 **WPF Desktop Client** 포트폴리오.
