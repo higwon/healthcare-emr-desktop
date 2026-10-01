@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.12" />
     <ProjectReference Include="../HealthNote.Application/HealthNote.Application.csproj" />
     <ProjectReference Include="../HealthNote.Domain/HealthNote.Domain.csproj" />
     <ProjectReference Include="../HealthNote.Infrastructure/HealthNote.Infrastructure.csproj" />

@@ -42,6 +42,8 @@ EncounterNote: ID, PatientId, visitDate(YYYY-MM-DD), chiefComplaint, assessment,
 UTF-8 JSON camelCase. 합성 seed는 재시작마다 기존 사용자 저장을 덮어쓰지 않는다.
 DTO는 실제 구현 Task에서 명시하고 OpenAPI와 contract test를 함께 갱신한다.
 
+EMR-101 구현 계약 보충: [EMR-101 API](emr-101-api.md)의 구체 DTO·오류·저장 설정과 OpenAPI 파일을 따른다. version 불일치 PUT 재시도는 같은 내용이라도 409이며 원본을 변경하지 않는다.
+
 | Method / Path | 요청 / 결과 |
 | --- | --- |
 | GET /api/v1/health | 기존 readiness 유지 |

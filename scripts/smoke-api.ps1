@@ -8,7 +8,8 @@ if ($Port -ne 5078) { throw 'Foundation host uses fixed loopback port 5078.' }
 # Verify the port is free; never stop a pre-existing listener.
 $probe = [Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback, $Port)
 try { $probe.Start() } finally { $probe.Stop() }
-$process = Start-Process -FilePath 'dotnet' -ArgumentList @('"' + $api + '"') -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $artifacts 'api-smoke.stdout.log') -RedirectStandardError (Join-Path $artifacts 'api-smoke.stderr.log')
+$database = Join-Path $artifacts ('api-smoke-' + [Guid]::NewGuid().ToString('N') + '.db')
+$process = Start-Process -FilePath 'dotnet' -ArgumentList @('"' + $api + '"', '--Emr:DatabasePath="' + $database + '"') -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $artifacts 'api-smoke.stdout.log') -RedirectStandardError (Join-Path $artifacts 'api-smoke.stderr.log')
 try {
     $deadline = [DateTime]::UtcNow.AddSeconds(20)
     $ready = $false
