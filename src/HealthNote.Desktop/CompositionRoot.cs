@@ -6,6 +6,7 @@ using HealthNote.Desktop.Diagnostics;
 using HealthNote.Desktop.Threading;
 using HealthNote.Desktop.ViewModels;
 using HealthNote.Infrastructure;
+using HealthNote.Infrastructure.Emr;
 
 namespace HealthNote.Desktop
 {
@@ -24,7 +25,8 @@ namespace HealthNote.Desktop
             ClientReadinessQuery query = new ClientReadinessQuery(client);
             WpfUiDispatcher ui = new WpfUiDispatcher(dispatcher);
             ClientDiagnostics diagnostics = new ClientDiagnostics();
-            Shell = new ShellViewModel(() => new ConnectionViewModel(query, ui, diagnostics));
+            Shell = new ShellViewModel(() => new ConnectionViewModel(query, ui, diagnostics),
+                new EmrWorkspaceViewModel(new HttpEmrQuery(client), ui));
         }
 
         public ShellViewModel Shell { get; }

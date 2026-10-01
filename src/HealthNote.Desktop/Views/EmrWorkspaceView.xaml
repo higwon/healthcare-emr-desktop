@@ -1,0 +1,105 @@
+<UserControl x:Class="HealthNote.Desktop.Views.EmrWorkspaceView"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ AutomationProperties.Name="환자 진료 기록 조회" SizeChanged="OnSizeChanged">
+ <UserControl.Resources>
+  <Style x:Key="PanelHeading" TargetType="TextBlock">
+   <Setter Property="FontSize" Value="{DynamicResource SectionFontSize}" />
+   <Setter Property="FontWeight" Value="SemiBold" />
+   <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
+   <Setter Property="TextWrapping" Value="Wrap" />
+   <Setter Property="Margin" Value="0,0,0,8" />
+  </Style>
+ </UserControl.Resources>
+ <Grid>
+  <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+  <StackPanel Margin="0,0,0,16">
+   <TextBlock Text="환자 진료 기록" FontSize="{DynamicResource TitleFontSize}" FontWeight="SemiBold"/>
+   <TextBlock Text="{Binding PatientContext}" Foreground="{DynamicResource AccentBrush}" Margin="0,6,0,0" AutomationProperties.Name="현재 환자"/>
+  </StackPanel>
+  <DockPanel Grid.Row="1" Margin="0,0,0,16">
+   <Button DockPanel.Dock="Right" Content="조회 취소" Command="{Binding CancelCommand}" Margin="8,0,0,0" VerticalAlignment="Bottom"/>
+   <Button DockPanel.Dock="Right" Content="검색" Command="{Binding SearchCommand}" Margin="8,0,0,0" VerticalAlignment="Bottom"/>
+   <StackPanel>
+    <TextBlock Text="환자 이름 또는 환자번호" Style="{DynamicResource Caption}" Margin="0,0,0,4"/>
+    <TextBox x:Name="SearchInput" Text="{Binding Search,UpdateSourceTrigger=PropertyChanged}" PreviewKeyDown="OnSearchKeyDown"
+     AutomationProperties.Name="환자 이름 또는 환자번호 검색"/>
+   </StackPanel>
+  </DockPanel>
+  <ScrollViewer x:Name="WorkspaceScroll" Grid.Row="2" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled" Focusable="False">
+   <Grid x:Name="WorkspaceGrid">
+    <Grid.ColumnDefinitions><ColumnDefinition x:Name="PatientColumn" Width="220"/><ColumnDefinition x:Name="HistoryColumn" Width="260"/><ColumnDefinition x:Name="DetailColumn" Width="*"/></Grid.ColumnDefinitions>
+    <Grid.RowDefinitions><RowDefinition x:Name="PatientRow" Height="*"/><RowDefinition x:Name="HistoryRow" Height="0"/><RowDefinition x:Name="DetailRow" Height="0"/></Grid.RowDefinitions>
+    <Border x:Name="PatientPanel" Style="{DynamicResource Surface}" Padding="12">
+     <Grid>
+      <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+      <TextBlock Text="환자 목록" Style="{DynamicResource PanelHeading}"/>
+      <StackPanel Grid.Row="1" Margin="0,0,0,12">
+       <TextBlock Text="{Binding PatientsStatus}" Style="{DynamicResource Caption}"/>
+       <Button Content="환자 다시 조회" Command="{Binding RetryPatientsCommand}" HorizontalAlignment="Left" Margin="0,8,0,0"/>
+      </StackPanel>
+      <ListBox x:Name="PatientList" Grid.Row="2" ItemsSource="{Binding Patients}" SelectedItem="{Binding SelectedPatient,Mode=TwoWay}"
+       PreviewKeyDown="OnPatientKeyDown" AutomationProperties.Name="환자 목록" ItemContainerStyle="{DynamicResource EmrPatientItemStyle}">
+       <ListBox.ItemTemplate><DataTemplate><StackPanel>
+        <TextBlock Text="{Binding DisplayName}" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListBoxItem}}"/>
+        <TextBlock Text="{Binding PatientNumber}" Style="{DynamicResource Caption}" Foreground="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Margin="0,4,0,0"/>
+       </StackPanel></DataTemplate></ListBox.ItemTemplate>
+      </ListBox>
+      <StackPanel Grid.Row="3" Margin="0,12,0,0">
+       <TextBlock Text="{Binding PatientPaging}" Style="{DynamicResource Caption}" Margin="0,0,0,8"/>
+       <StackPanel Orientation="Horizontal">
+        <Button Content="이전" Command="{Binding PreviousPatientsCommand}" AutomationProperties.Name="환자 이전 페이지" Margin="0,0,6,0"/>
+        <Button Content="다음" Command="{Binding NextPatientsCommand}" AutomationProperties.Name="환자 다음 페이지"/>
+       </StackPanel>
+      </StackPanel>
+     </Grid>
+    </Border>
+    <Border x:Name="HistoryPanel" Grid.Column="1" Style="{DynamicResource Surface}" Padding="12" Margin="12,0,0,0">
+     <Grid>
+      <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+      <TextBlock Text="진료 이력" Style="{DynamicResource PanelHeading}"/>
+      <StackPanel Grid.Row="1" Margin="0,0,0,12">
+       <TextBlock Text="{Binding HistoryStatus}" Style="{DynamicResource Caption}"/>
+       <Button Content="이력 다시 조회" Command="{Binding RetryHistoryCommand}" HorizontalAlignment="Left" Margin="0,8,0,0"/>
+      </StackPanel>
+      <ListBox x:Name="RecordList" Grid.Row="2" ItemsSource="{Binding History}" SelectedItem="{Binding SelectedRecord,Mode=TwoWay}"
+       PreviewKeyDown="OnRecordKeyDown" AutomationProperties.Name="선택 환자 진료 이력" ItemContainerStyle="{DynamicResource RecordItemStyle}">
+       <ListBox.ItemTemplate><DataTemplate><StackPanel>
+        <TextBlock Text="{Binding VisitDate}" Style="{DynamicResource Caption}" Foreground="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListBoxItem}}"/>
+        <TextBlock Text="{Binding ChiefComplaint}" TextWrapping="Wrap" FontWeight="SemiBold" Margin="0,6,0,0" Foreground="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListBoxItem}}"/>
+       </StackPanel></DataTemplate></ListBox.ItemTemplate>
+      </ListBox>
+      <StackPanel Grid.Row="3" Margin="0,12,0,0">
+       <TextBlock Text="{Binding HistoryPaging}" Style="{DynamicResource Caption}" Margin="0,0,0,8"/>
+       <StackPanel Orientation="Horizontal">
+        <Button Content="이전" Command="{Binding PreviousHistoryCommand}" AutomationProperties.Name="진료 이력 이전 페이지" Margin="0,0,6,0"/>
+        <Button Content="다음" Command="{Binding NextHistoryCommand}" AutomationProperties.Name="진료 이력 다음 페이지"/>
+       </StackPanel>
+      </StackPanel>
+     </Grid>
+    </Border>
+    <Border x:Name="DetailPanel" Grid.Column="2" Style="{DynamicResource Surface}" Padding="16" Margin="12,0,0,0" PreviewKeyDown="OnDetailKeyDown">
+     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Focusable="False">
+      <StackPanel>
+       <TextBlock x:Name="DetailHeading" Text="진료 기록 상세" Style="{DynamicResource PanelHeading}" Focusable="True" AutomationProperties.Name="진료 기록 상세"/>
+       <TextBlock Text="{Binding PatientContext}" Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,8"/>
+       <TextBlock Text="{Binding DetailStatus}" Style="{DynamicResource Caption}" Margin="0,0,0,8"/>
+       <Button Content="상세 다시 조회" Command="{Binding LoadDetailCommand}" HorizontalAlignment="Left" Margin="0,0,0,16"/>
+       <StackPanel DataContext="{Binding Detail}">
+        <TextBlock Text="진료일" Style="{DynamicResource Caption}"/>
+        <TextBlock Text="{Binding Content.VisitDate,StringFormat={}{0:yyyy-MM-dd}}" FontSize="20" FontWeight="SemiBold" Margin="0,4,0,16"/>
+        <TextBlock Text="주호소" Style="{DynamicResource Caption}"/>
+        <TextBlock Text="{Binding Content.ChiefComplaint}" TextWrapping="Wrap" FontSize="18" FontWeight="SemiBold" Margin="0,6,0,20"/>
+        <TextBlock Text="평가" Style="{DynamicResource Caption}"/>
+        <TextBlock Text="{Binding Content.Assessment}" TextWrapping="Wrap" Margin="0,6,0,20"/>
+        <TextBlock Text="계획" Style="{DynamicResource Caption}"/>
+        <TextBlock Text="{Binding Content.Plan}" TextWrapping="Wrap" Margin="0,6,0,20"/>
+        <TextBlock Text="{Binding Version,StringFormat=저장 버전 {0}}" Style="{DynamicResource Caption}"/>
+        <TextBlock Text="{Binding SavedAtUtc,StringFormat=저장 시각(UTC) {0:yyyy-MM-dd HH:mm:ss}}" Style="{DynamicResource Caption}" Margin="0,4,0,0"/>
+       </StackPanel>
+      </StackPanel>
+     </ScrollViewer>
+    </Border>
+   </Grid>
+  </ScrollViewer>
+ </Grid>
+</UserControl>

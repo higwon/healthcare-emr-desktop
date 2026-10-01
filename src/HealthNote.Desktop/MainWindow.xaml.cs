@@ -16,6 +16,11 @@ namespace HealthNote.Desktop
             this.shell = shell;
             InitializeComponent();
             DataContext = shell;
+            if (shell.IsEmrWorkspace)
+            {
+                Title = "진료노트 · EMR 합성 환자 데모";
+                System.Windows.Automation.AutomationProperties.SetName(this, "EMR 환자 진료 기록 조회");
+            }
             Loaded += OnLoaded;
             Closed += OnClosed;
             SourceInitialized += OnSourceInitialized;
