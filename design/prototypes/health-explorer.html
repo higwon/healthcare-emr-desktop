@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="data:,">
+<title>건강노트 · 탐색 Shell 시안</title>
+<style>
+:root{--bg:#f5f7f9;--surface:#fff;--ink:#202d35;--muted:#61737f;--line:#e2e8ec;--green:#087b60;--green-soft:#e8f4ef;--error:#a53339;--blue:#4169ac;--radius:10px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 "Segoe UI","Malgun Gothic",sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:default;opacity:.5}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #156ed0;outline-offset:3px}
+button{border:1px solid var(--line);border-radius:7px;background:white;color:var(--ink);padding:8px 12px}
+button:hover{background:#f0f5f3}button.primary{background:var(--green);color:white;border-color:var(--green)}
+select,input{border:1px solid #ccd7de;border-radius:6px;background:white;padding:7px 10px;color:var(--ink);min-height:36px}
+h1,h2,h3,p{margin:0}h1{font-size:26px;letter-spacing:-.8px;line-height:1.3}h2{font-size:17px}h3{font-size:15px}
+.muted{color:var(--muted)}.small{font-size:12px}.badge{display:inline-flex;align-items:center;background:var(--green-soft);color:var(--green);padding:3px 8px;border-radius:5px;font-size:12px}
+.prototype{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:8px 18px;background:#edf1f4;border-bottom:1px solid #d5dfe5;font-size:12px}
+.prototype label{display:flex;align-items:center;gap:8px}.prototype select{font-size:12px;min-height:28px;padding:3px 8px}
+.app{display:grid;grid-template-columns:184px minmax(0,1fr);min-height:calc(100vh - 46px)}
+.sidebar{display:flex;flex-direction:column;background:white;border-right:1px solid var(--line);padding:24px 14px;gap:28px}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px;font-size:19px;font-weight:700}.mark{flex:none;width:30px;height:30px;display:grid;place-items:center;background:var(--green);border-radius:9px;color:white;font-size:18px}
+nav{display:flex;flex-direction:column;gap:6px}nav button{display:flex;align-items:center;gap:10px;border:0;background:none;text-align:left;padding:11px 12px;width:100%;color:var(--muted);border-radius:7px}
+nav button[aria-current="page"]{color:var(--green);background:var(--green-soft);font-weight:600}nav svg{width:19px;height:19px;flex:none}
+.side-bottom{font-size:12px;margin-top:auto;padding:12px 8px;border-top:1px solid var(--line);display:grid;gap:5px}.dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;margin-right:6px}
+.workspace{min-width:0;display:flex;flex-direction:column}.topbar{background:white;border-bottom:1px solid var(--line);padding:15px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.profile{display:flex;align-items:center;gap:10px}.avatar{display:grid;place-items:center;width:32px;height:32px;background:#edf2f6;border-radius:50%;color:#566978;font-weight:600}
+main{padding:25px 28px 32px;max-width:1500px;width:100%;margin:0 auto}.heading{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px}
+.heading p{margin-top:6px;color:var(--muted)}.period{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:20px}
+.stat{background:white;border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px}.stat-label{display:flex;justify-content:space-between;color:var(--muted)}
+.stat-value{font-size:30px;font-weight:600;line-height:1.4;margin:6px 0}.stat-value span{font-size:14px;font-weight:400;margin-left:5px;color:var(--muted)}.stat-footer{font-size:12px;color:var(--muted)}
+.columns{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,1fr);gap:18px}
+.panel{background:white;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;min-width:0}
+.panel-heading{padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line)}
+.text-action{border:0;padding:0;background:none;color:var(--green);font-weight:600;font-size:13px}
+.event-list{padding:0 20px}.event-row{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:12px;align-items:center;border-bottom:1px solid var(--line);padding:15px 0}.event-row:last-child{border:0}
+.event-icon{width:36px;height:36px;display:grid;place-items:center;border-radius:8px;background:#eef2f6;color:#54708b;font-weight:600}.event-row p{margin:3px 0 0;font-size:12px;color:var(--muted)}.event-title{border:0;padding:0;background:none;text-align:left;font-weight:600}
+.event-row time{font-size:12px;color:var(--muted)}.event-kind{font-size:11px;display:block;color:var(--green);margin-bottom:2px}.panel-footer{padding:12px 20px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+.metrics{padding:0 20px}.metric{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);gap:12px}.metric:last-child{border:0}.metric strong{font-size:22px;font-weight:600}.metric strong span{font-size:12px;font-weight:400;color:var(--muted);margin-left:4px}
+.scope-note{margin-top:18px;font-size:12px;color:var(--muted)}.scope-note strong{font-weight:500;color:#405864}
+.filters{display:flex;align-items:flex-end;flex-wrap:wrap;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line)}.field{display:grid;gap:5px;font-size:12px;color:var(--muted)}.field.grow{flex:1;min-width:180px}.field input{width:100%}
+.timeline-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(285px,.62fr);gap:18px}.timeline-layout.no-detail{grid-template-columns:1fr}.group-label{padding:16px 20px 3px;color:var(--muted);font-weight:600;font-size:12px}
+.timeline-list{padding:0 12px;max-height:450px;overflow:auto}.record{display:grid;grid-template-columns:70px 34px minmax(0,1fr);align-items:center;gap:10px;border:1px solid transparent;border-radius:7px;width:100%;text-align:left;margin:4px 0;padding:13px 10px;background:white}
+.record .date{font-size:12px;color:var(--muted)}.record[aria-pressed="true"]{background:var(--green-soft);border-color:#92c5b1}.record .record-summary{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.list-footer{padding:13px 20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted)}
+.detail{align-self:start}.detail-body{padding:20px}.detail-type{color:var(--green);font-size:12px;margin-bottom:5px}.detail-body h2{line-height:1.5;margin-bottom:20px}.definition{display:grid;grid-template-columns:72px minmax(0,1fr);row-gap:12px;font-size:13px;margin:0}.definition dt{color:var(--muted)}.definition dd{margin:0;overflow-wrap:anywhere}
+.detail-note{padding:14px;background:#f5f7f9;border-radius:6px;margin-top:20px;font-size:12px;color:var(--muted)}.detail-actions{margin-top:20px;display:flex;gap:8px}.close{padding:1px 8px;font-size:19px;border:0;color:var(--muted);background:none}
+.notice{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:14px 18px;margin-bottom:16px;border:1px solid #eed1d3;background:#fff7f7;color:var(--error);border-radius:8px}.notice p{font-size:12px;margin-top:3px}
+.empty{padding:70px 25px;text-align:center;color:var(--muted)}.empty h2{color:var(--ink);margin-bottom:8px}.empty button{margin-top:18px}.loading{padding:60px 25px;text-align:center;color:var(--muted)}
+.chart-area{padding:22px 22px 12px}.chart-head{display:flex;justify-content:space-between;gap:12px;margin-bottom:12px}.chart-value{font-size:25px;font-weight:600}.chart-value span{font-size:13px;font-weight:400;color:var(--muted)}
+.chart{width:100%;height:auto;display:block}.chart text{fill:var(--muted);font:12px "Segoe UI","Malgun Gothic",sans-serif}.chart line{stroke:var(--line)}.chart .series{fill:none;stroke:var(--green);stroke-width:2.5}.chart circle{fill:white;stroke:var(--green);stroke-width:2}.chart .selected-point{fill:var(--green);stroke:white;stroke-width:3}
+.chart-notes{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:0 22px 20px;font-size:12px;color:var(--muted)}
+.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th,.data-table td{padding:11px 20px;border-bottom:1px solid var(--line);text-align:left}.data-table th{font-weight:500;color:var(--muted);background:#fafbfd}.data-table td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.data-table button{border:0;background:none;padding:0;color:var(--green)}.data-table tr.selected{background:var(--green-soft)}.trend-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,.43fr);gap:18px}.insight{padding:20px}.insight p{font-size:13px;color:var(--muted);margin-top:12px}.gap-legend{display:inline-block;border-top:2px dashed var(--muted);width:20px;margin-right:6px;vertical-align:middle}
+.footer{margin-top:auto;padding:9px 28px;background:white;border-top:1px solid var(--line);font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:12px}
+dialog{border:1px solid var(--line);border-radius:12px;padding:26px;max-width:440px;width:calc(100% - 40px);box-shadow:0 12px 60px #1c303b25}dialog::backdrop{background:#1c303b55}dialog h2{margin-bottom:12px}dialog p{color:var(--muted);margin-bottom:18px}dialog footer{text-align:right}
+@media(max-width:1120px){.brand{font-size:18px;white-space:nowrap}.app{grid-template-columns:160px minmax(0,1fr)}.topbar,main{padding-left:22px;padding-right:22px}.columns{grid-template-columns:minmax(0,1.35fr) minmax(245px,1fr)}.timeline-layout{grid-template-columns:minmax(0,1fr)}.detail{margin-top:0}.trend-layout{grid-template-columns:minmax(0,1fr)}.stat{padding:16px}.stat-value{font-size:27px}.heading{align-items:flex-start}}
+@media(max-width:760px){.app{grid-template-columns:1fr}.sidebar{padding:14px;gap:14px}.sidebar nav{flex-direction:row}.sidebar nav button{justify-content:center}.side-bottom{display:none}.topbar{flex-wrap:wrap}.heading{flex-direction:column}.columns{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.brand{font-size:18px}main{padding:20px 16px}.record{grid-template-columns:62px 30px minmax(0,1fr)}.event-row{grid-template-columns:32px minmax(0,1fr)}.event-row time{grid-column:2}}
+@media(forced-colors:active){button[aria-current="page"],.record[aria-pressed="true"]{outline:2px solid Highlight}.mark,.badge{forced-color-adjust:auto}}
+</style>
+</head>
+<body>
+<div class="prototype"><span><strong>UI 설계 검토</strong> · 합성 예시 · 실제 조회/저장 없음</span><label>화면 상태 <select id="scenario" aria-label="검토할 화면 상태"><option value="normal">정상</option><option value="empty">기록 없음</option><option value="loading">조회 중</option><option value="error">조회 실패</option><option value="stale">이전 조건의 자료</option><option value="long">긴 기록 제목</option><option value="idle">조회 전 / 취소</option></select></label></div>
+<div class="app">
+<aside class="sidebar"><div class="brand"><span class="mark" aria-hidden="true">+</span>건강노트</div>
+<nav aria-label="주요 탐색">
+<button data-screen="overview" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>건강 요약</button>
+<button data-screen="timeline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M6 3v18M10 6h11M10 12h11M10 18h11"/><circle cx="6" cy="6" r="2" fill="white"/><circle cx="6" cy="12" r="2" fill="white"/><circle cx="6" cy="18" r="2" fill="white"/></svg>기록 탐색</button>
+<button data-screen="trend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 3v18h18M6 16l5-5 4 2 6-7"/></svg>지표 추이</button>
+</nav><div class="side-bottom"><span><span class="dot"></span>합성 데이터 데모</span><span class="muted small">실제 건강정보를 사용하지 않아요</span></div></aside>
+<div class="workspace">
+<header class="topbar"><div class="profile"><span class="avatar" aria-hidden="true">D</span><div><strong>데모 프로필</strong><span class="muted small"> · 합성 데이터</span></div></div><button id="demo-info" class="text-action">데모 안내</button></header>
+<main id="main"></main><footer class="footer"><span id="context-foot">데모 데이터 v1 · 표시 시간대: 서울</span><span>건강정보 탐색 · 읽기 전용 시안</span></footer>
+</div></div>
+<dialog id="demo-dialog" aria-labelledby="demo-title"><h2 id="demo-title">합성 데이터로 보는 탐색 시안</h2><p>기록 선택, 필터, 상세와 추이 전환을 검토하는 화면입니다. 실제 서버 연결·저장·의료 판단 기능은 포함하지 않습니다.</p><footer><button id="close-demo" class="primary">확인</button></footer></dialog>
+<script>
+(() => {
+const root = document.getElementById('main');
+const scenario = document.getElementById('scenario');
+const records = [
+{id:'body-3',type:'체성분',icon:'체',date:'09.28',full:'2026.09.28 · 09:20',title:'체성분 측정',summary:'체중 70.8 kg · 골격근량 31.2 kg',source:'체성분 측정 · 데모',metric:true},
+{id:'symptom-1',type:'증상',icon:'증',date:'09.24',full:'2026.09.24 · 18:30',title:'사용자 증상 기록',summary:'기록한 내용과 시각을 확인해요',source:'직접 기록 · 데모'},
+{id:'blood-1',type:'검사',icon:'검',date:'09.18',full:'2026.09.18 · 10:00',title:'혈액검사 결과',summary:'측정 항목 4개 · 원본 출처 확인',source:'검사 결과 · 데모'},
+{id:'med-1',type:'복약',icon:'약',date:'09.16',full:'2026.09.16 · 08:00',title:'복약 기록',summary:'일정에 연결된 복용 기록',source:'복약 일정 · 데모'},
+{id:'body-2',type:'체성분',icon:'체',date:'09.14',full:'2026.09.14 · 09:10',title:'체성분 측정',summary:'체중 71.1 kg · 골격근량 31.0 kg',source:'체성분 측정 · 데모',metric:true},
+{id:'check-1',type:'검진',icon:'진',date:'09.08',full:'2026.09.08 · 10:30',title:'건강검진 기록',summary:'검진 결과 문서와 측정 항목',source:'건강검진 · 데모'}
+];
+const points=[['2026.09.28','70.8'],['2026.09.14','71.1'],['2026.09.07','—'],['2026.08.31','71.4'],['2026.08.17','71.8']];
+let screen='overview',selected='body-3',detailOpen=true,type='전체',period='최근 3개월',selectedPoint=0,lastDetailTrigger=null,search='';
+const shortPeriod = () => period==='최근 1개월'&&scenario.value!=='stale';
+const escapeText = value => String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const titleOf = r => scenario.value==='long' && r.id==='body-3' ? '체성분 측정 기록: 측정 날짜와 기기 구분, 측정 당시의 활동 메모, 표시 단위 등 상세 설명이 함께 포함되어 목록과 상세에서 전체 내용을 확인할 수 있는 긴 제목 예시' : r.title;
+const heading = (title,subtitle) => '<div class="heading"><div><h1>'+title+'</h1><p>'+subtitle+'</p></div><label class="period"><span class="muted small">조회 기간</span><select id="period" aria-label="조회 기간"><option>최근 3개월</option><option>최근 1개월</option></select></label></div>';
+const notice = () => scenario.value==='error' ? '<div class="notice" role="alert"><div><strong>기록을 불러오지 못했어요</strong><p>연결을 확인한 뒤 다시 시도해 주세요.</p></div><button data-action="retry">다시 시도</button></div>' : scenario.value==='stale' ? '<div class="notice" role="status"><div><strong>이전 조회 조건의 자료를 표시하고 있어요</strong><p>현재 선택한 기간의 결과가 아닙니다. 새 자료를 불러와 주세요.</p></div><button data-action="retry">새 조건으로 조회</button></div>' : '';
+const blocked = () => scenario.value==='idle' ? '<div class="panel empty"><h2>아직 자료를 조회하지 않았어요</h2><p>조회가 취소됐습니다. 기록이 없는 상태와는 다릅니다.</p><button data-action="retry">다시 조회</button></div>' : scenario.value==='empty' ? '<div class="panel empty"><h2>선택한 기간에 기록이 없어요</h2><p>조회 기간을 바꾸거나 필터를 해제해 주세요.</p><button data-action="reset">기간·필터 초기화</button></div>' : scenario.value==='loading' ? '<div class="panel loading" role="status" aria-live="polite"><h2>건강 기록을 불러오는 중이에요</h2><p>선택한 프로필과 기간의 자료를 확인하고 있어요.</p><button data-action="cancel" style="margin-top:16px">조회 취소</button></div>' : scenario.value==='error' ? '<div class="panel empty"><h2>연결이 복구되면 다시 조회할 수 있어요</h2><p>다른 기간의 기록으로 대체하지 않습니다.</p></div>' : '';
+function overview(){
+return heading('건강 요약','선택한 기간의 기록과 최근 측정값을 한곳에서 확인해요.')+notice()+(blocked()||`
+<div class="stats"><div class="stat"><div class="stat-label">건강 기록<span class="badge">선택 기간</span></div><div class="stat-value">${period==='최근 1개월'&&scenario.value!=='stale'?'6':'24'}<span>건</span></div><div class="stat-footer">6개 기록 유형 · ${scenario.value==='stale'?'이전 기간':period} 합성 예시</div></div><div class="stat"><div class="stat-label">체성분 측정</div><div class="stat-value">${period==='최근 1개월'&&scenario.value!=='stale'?'2':'8'}<span>건</span></div><div class="stat-footer">가장 최근 측정 · 2026.09.28</div></div><div class="stat"><div class="stat-label">검사·검진 기록</div><div class="stat-value">${period==='최근 1개월'&&scenario.value!=='stale'?'2':'4'}<span>건</span></div><div class="stat-footer">${period==='최근 1개월'&&scenario.value!=='stale'?'검사 1건 · 건강검진 1건':'검사 3건 · 건강검진 1건'}</div></div></div>
+<div class="columns"><section class="panel"><div class="panel-heading"><h2>최근 건강 기록</h2><button class="text-action" data-action="timeline">전체 기록 보기 →</button></div><div class="event-list">${records.slice(0,4).map(r=>`<div class="event-row"><span class="event-icon" aria-hidden="true">${r.icon}</span><div><span class="event-kind">${r.type}</span><button class="event-title" data-record="${r.id}">${titleOf(r)}</button><p>${r.summary}</p></div><time>${r.date}</time></div>`).join('')}</div><div class="panel-footer">선택한 프로필·기간의 최신 기록을 표시해요</div></section>
+<section class="panel"><div class="panel-heading"><h2>최근 측정값</h2><button class="text-action" data-action="trend">추이 보기 →</button></div><div class="metrics"><div class="metric"><div>체중<div class="muted small">2026.09.28 · 체성분</div></div><strong>70.8<span>kg</span></strong></div><div class="metric"><div>골격근량<div class="muted small">2026.09.28 · 체성분</div></div><strong>31.2<span>kg</span></strong></div><div class="metric"><div>체지방률<div class="muted small">2026.09.28 · 체성분</div></div><strong>21.4<span>%</span></strong></div></div><div class="panel-footer">측정 날짜와 단위를 함께 확인할 수 있어요</div></section></div>
+<p class="scope-note"><strong>합성 데이터 예시</strong> · 건강 기록과 측정값 탐색에 집중한 읽기 화면입니다.</p>`);
+}
+function timeline(){
+const visible = records.filter(r=>(type==='전체'||r.type===type)&&(!search||titleOf(r).includes(search)||r.summary.includes(search)));
+const r=records.find(r=>r.id===selected);
+return heading('기록 탐색','기간과 유형으로 기록을 찾고, 선택한 기록의 출처를 확인해요.')+notice()+`
+<div class="timeline-layout ${detailOpen?'':'no-detail'}"><section class="panel"><div class="filters"><label class="field">기록 유형<select id="type" aria-label="기록 유형"><option>전체</option><option>체성분</option><option>검사</option><option>검진</option><option>증상</option><option>복약</option><option>방문</option></select></label><label class="field grow">화면 내 기록 찾기<input id="search" placeholder="기록 제목 또는 요약" value="${escapeText(search)}"></label></div>
+${blocked()||`<div class="group-label">2026년 9월 · ${visible.length}건 표시</div><div class="timeline-list">${visible.map(r=>`<button class="record" data-record="${r.id}" aria-pressed="${selected===r.id}"><span class="date">${r.date}</span><span class="event-icon" aria-hidden="true">${r.icon}</span><span><span class="event-kind">${r.type}</span><strong>${titleOf(r)}</strong><span class="record-summary">${r.summary}</span></span></button>`).join('')||'<div class="empty"><h2>일치하는 기록이 없어요</h2><p>필터나 검색어를 바꿔 주세요.</p></div>'}</div><div class="list-footer"><span>화면 내 합성 표시 자료 · ${visible.length}건</span><span>최신순</span></div>`}</section>
+${detailOpen&&!blocked()&&r?`<aside class="panel detail" aria-label="선택한 기록 상세"><div class="panel-heading"><h3>기록 상세</h3><button class="close" data-action="close-detail" aria-label="기록 상세 닫기">×</button></div><div class="detail-body"><div class="detail-type">${r.type}</div><h2>${titleOf(r)}</h2><dl class="definition"><dt>기록 시각</dt><dd>${r.full}</dd><dt>출처</dt><dd>${r.source}</dd><dt>요약</dt><dd>${r.summary}</dd></dl><div class="detail-note">이 기록은 데모 자료입니다. 기록 시각과 출처를 함께 확인해 주세요.</div>${r.metric?'<div class="detail-actions"><button class="primary" data-action="trend">이 측정의 추이 보기</button></div>':''}</div></aside>`:''}</div>`;
+}
+function trend(){
+return heading('지표 추이','측정값의 변화와 결측을 확인하고, 같은 자료를 표로 탐색해요.')+notice()+(blocked()||`
+<div class="trend-layout"><section class="panel"><div class="filters"><label class="field">지표<select id="metric" aria-label="지표"><option>체중 · kg</option></select></label><span class="muted small">동일 지표·단위의 합성 측정 시계열</span></div><div class="chart-area"><div class="chart-head"><div><h2>체중</h2><span class="muted small">선택 측정 · ${points[selectedPoint][0]}</span></div><div class="chart-value">${points[selectedPoint][1]==='—'?'측정값 없음':points[selectedPoint][1]+'<span>kg</span>'}</div></div>
+<svg class="chart" viewBox="0 0 640 250" role="img" aria-label="체중 합성 추이. ${shortPeriod()?'9월 자료만 표시합니다.':'8월 17일 71.8kg, 8월 31일 71.4kg.'} 9월 7일 결측, 9월 14일 71.1kg, 9월 28일 70.8kg. 결측 구간은 연결하지 않습니다."><text x="4" y="18">kg</text><line x1="50" y1="45" x2="620" y2="45"/><line x1="50" y1="100" x2="620" y2="100"/><line x1="50" y1="155" x2="620" y2="155"/><line x1="50" y1="210" x2="620" y2="210"/><text x="10" y="49">72.0</text><text x="10" y="104">71.5</text><text x="10" y="159">71.0</text><text x="10" y="214">70.5</text><path class="series" d="${shortPeriod()?'M300 144L605 177':'M65 67L200 111M450 144L605 177'}"/>${shortPeriod()?'':'<circle cx="65" cy="67" r="5"/><circle cx="200" cy="111" r="5"/>'}<circle cx="${shortPeriod()?300:450}" cy="144" r="5"/><circle cx="605" cy="177" r="5"/>${selectedPoint===2?'':'<circle cx="'+(shortPeriod()?[605,300,0,0,0]:[605,450,0,200,65])[selectedPoint]+'" cy="'+[177,144,0,111,67][selectedPoint]+'" r="6" class="selected-point"/>'}${shortPeriod()?'':'<text x="65" y="237" text-anchor="middle">08.17</text><text x="200" y="237" text-anchor="middle">08.31</text>'}<text x="${shortPeriod()?65:320}" y="237" text-anchor="middle">09.07</text><text x="${shortPeriod()?300:450}" y="237" text-anchor="middle">09.14</text><text x="605" y="237" text-anchor="middle">09.28</text><text x="${shortPeriod()?65:320}" y="140" text-anchor="middle">측정값 없음</text></svg></div><div class="chart-notes"><span><span class="gap-legend"></span>결측 구간은 연결하지 않아요</span><span>참고 구간 없음 · 합성 예시</span></div>
+<table class="data-table"><thead><tr><th scope="col">측정 날짜</th><th scope="col">출처</th><th scope="col">값 (kg)</th></tr></thead><tbody>${(shortPeriod()?points.slice(0,3):points).map((p,i)=>`<tr class="${selectedPoint===i?'selected':''}"><td><button data-point="${i}" aria-label="${p[0]} 측정 선택">${p[0]}</button></td><td>체성분 측정 · 데모</td><td>${p[1]==='—'?'결측':p[1]}</td></tr>`).join('')}</tbody></table></section>
+<aside class="panel insight"><h2>선택한 측정</h2><p>${points[selectedPoint][0]}</p><div class="stat-value">${points[selectedPoint][1]==='—'?'측정값 없음':points[selectedPoint][1]+'<span>kg</span>'}</div><dl class="definition"><dt>출처</dt><dd>체성분 측정 · 데모</dd><dt>단위</dt><dd>kg</dd><dt>상태</dt><dd>${points[selectedPoint][1]==='—'?'측정값 없음':'측정값 있음'}</dd></dl><p>표의 날짜를 선택하면 같은 측정의 값을 확인할 수 있어요. 결측은 0으로 표시하지 않습니다.</p><button data-action="timeline" style="margin-top:20px">기록으로 돌아가기</button></aside></div>`);
+}
+function render(){
+document.querySelectorAll('[data-screen]').forEach(b=>{if(b.dataset.screen===screen)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+root.innerHTML=screen==='overview'?overview():screen==='timeline'?timeline():trend();
+const periodInput=root.querySelector('#period');periodInput.value=period;periodInput.onchange=()=>{period=periodInput.value;selectedPoint=0;render()};
+const typeInput=root.querySelector('#type');if(typeInput){typeInput.value=type;typeInput.onchange=()=>{type=typeInput.value;if(type!=='전체'&&records.find(r=>r.id===selected)?.type!==type)selected='';detailOpen=false;render()}}
+const searchInput=root.querySelector('#search');if(searchInput)searchInput.onchange=()=>{search=searchInput.value;detailOpen=false;render();root.querySelector('#search').focus()};
+root.querySelectorAll('[data-record]').forEach(b=>b.onclick=()=>{selected=b.dataset.record;screen='timeline';detailOpen=true;lastDetailTrigger=selected;render();root.querySelector('[data-action="close-detail"]')?.focus()});
+root.querySelectorAll('[data-point]').forEach(b=>b.onclick=()=>{selectedPoint=Number(b.dataset.point);render();root.querySelector('[data-point="'+selectedPoint+'"]').focus()});
+root.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>act(b.dataset.action));
+document.getElementById('context-foot').textContent='데모 데이터 v1 · '+period+(scenario.value==='stale'?' · 표시 자료: 이전 최근 3개월':'')+' · 표시 시간대: 서울';
+}
+function act(action){if(action==='timeline'||action==='trend'){screen=action;scenario.value='normal';render()}else if(action==='close-detail'){detailOpen=false;render();root.querySelector('[data-record="'+(lastDetailTrigger||selected)+'"]')?.focus()}else if(action==='retry'||action==='reset'){scenario.value='normal';period='최근 3개월';type='전체';search='';render()}else if(action==='cancel'){scenario.value='idle';render()}}
+document.querySelectorAll('[data-screen]').forEach(b=>b.onclick=()=>{screen=b.dataset.screen;render()});
+scenario.onchange=()=>{if(scenario.value==='stale')period='최근 1개월';render()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('demo-dialog').open&&screen==='timeline'&&detailOpen){e.preventDefault();act('close-detail')}});
+document.getElementById('demo-info').onclick=()=>document.getElementById('demo-dialog').showModal();
+document.getElementById('close-demo').onclick=()=>document.getElementById('demo-dialog').close();
+render();
+})();
+</script>
+</body></html>
