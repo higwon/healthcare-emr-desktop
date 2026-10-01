@@ -149,8 +149,8 @@ namespace HealthNote.Desktop.Tests
                 try
                 {
                     window.Show();
-                    window.Width = 900;
-                    window.Height = 520;
+                    window.Width = window.MinWidth;
+                    window.Height = window.MinHeight;
                     window.UpdateLayout();
                     TimelineView view = Children<TimelineView>(window).Single();
                     var detail = (Border)view.FindName("DetailSurface");
