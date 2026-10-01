@@ -118,4 +118,7 @@
     <Style x:Key="RecordItemStyle" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
         <Setter Property="AutomationProperties.Name" Value="{Binding AccessibleName}" />
     </Style>
+    <Style x:Key="EmrPatientItemStyle" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+        <Setter Property="AutomationProperties.Name" Value="{Binding DisplayName}" />
+    </Style>
 </ResourceDictionary>

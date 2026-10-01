@@ -16,7 +16,7 @@
         </Grid.ColumnDefinitions>
         <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0" Padding="12,24">
             <DockPanel>
-                <TextBlock DockPanel.Dock="Top" Text="건강노트" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" Margin="8,0,0,28" />
+                <TextBlock DockPanel.Dock="Top" Text="{Binding Brand}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" Margin="8,0,0,28" />
                 <StackPanel DockPanel.Dock="Bottom" Margin="8,24,0,0">
                     <TextBlock Text="합성 데이터 데모" FontWeight="SemiBold" />
                     <TextBlock Text="실제 건강정보를 사용하지 않아요" Style="{StaticResource Caption}" Margin="0,6,0,0" />
@@ -51,10 +51,11 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel>
-                        <TextBlock Text="데모 프로필" FontWeight="SemiBold" />
-                        <TextBlock Text="합성 데이터 Preview · 실제 조회/저장 없음" Style="{StaticResource Caption}" />
+                        <TextBlock Text="{Binding ContextTitle}" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding ContextDescription}" Style="{StaticResource Caption}" />
                     </StackPanel>
                     <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                        <StackPanel.Style><Style TargetType="StackPanel"><Style.Triggers><DataTrigger Binding="{Binding IsEmrWorkspace}" Value="True"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style></StackPanel.Style>
                         <TextBlock Text="조회 기간" Style="{StaticResource Caption}" Margin="0,0,0,4" />
                         <ComboBox x:Name="PeriodSelector" ItemsSource="{Binding Periods}" SelectedItem="{Binding Period, Mode=TwoWay}" MinWidth="126" AutomationProperties.Name="조회 기간" />
                     </StackPanel>

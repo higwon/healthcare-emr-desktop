@@ -1,0 +1,8 @@
+Actual loopback API -> HttpEmrQuery -> VM -> native WPF content render. Not OS screenshot or DPI matrix.
+Build: Release / 1.0.0+85cf1798cc474a8ab04473703e9b198e401a76a1
+OS: Microsoft Windows NT 10.0.26200.0
+DPI: 192 x 192
+Client DIP: 1267 x 764.5
+Outer DIP: 1280 x 800
+Work area DIP: 0,0,1920,1032
+HighContrast: False
