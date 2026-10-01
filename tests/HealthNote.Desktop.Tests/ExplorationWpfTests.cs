@@ -157,6 +157,9 @@ namespace HealthNote.Desktop.Tests
                     var list = (ListBox)view.FindName("RecordList");
                     Assert.AreEqual(1, Grid.GetRow(detail));
                     Assert.IsGreaterThan(0d, list.ActualHeight);
+                    TextBlock rowTitle = Children<TextBlock>(list).First(t => t.Text.Length > 50);
+                    Assert.IsGreaterThan(30d, rowTitle.ActualHeight);
+                    Assert.IsLessThanOrEqualTo(list.ActualWidth, rowTitle.ActualWidth);
                     Assert.IsGreaterThan(0d, detail.ActualHeight);
                     Assert.IsGreaterThanOrEqualTo(36d, Children<ScrollViewer>(detail).Single().ViewportHeight);
                     Assert.IsTrue(Children<TextBlock>(detail).Any(t => t.Text.Length > 50 && t.TextWrapping == TextWrapping.Wrap));

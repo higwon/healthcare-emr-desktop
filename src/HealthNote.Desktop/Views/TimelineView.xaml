@@ -60,7 +60,7 @@
                         <DataTemplate>
                             <StackPanel>
                                 <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Text="{Binding Type}" Style="{DynamicResource Caption}" />
-                                <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Text="{Binding Title}" FontWeight="SemiBold" Margin="0,4" />
+                                <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Text="{Binding Title}" TextWrapping="Wrap" FontWeight="SemiBold" Margin="0,4" />
                                 <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Text="{Binding Summary}" Style="{DynamicResource Caption}" />
                                 <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Text="{Binding Date}" Style="{DynamicResource Caption}" Margin="0,6,0,0" />
                             </StackPanel>
