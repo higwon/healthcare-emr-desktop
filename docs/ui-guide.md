@@ -49,5 +49,5 @@ DP/리소스/theme 변경·반복 탐색의 invalidation·구독·timer·callbac
 ## HC-103 탐색 Shell 디자인 제안
 
 새 탐색 시안·창/리소스/키보드/Automation 계약은 [exploration-shell-design](exploration-shell-design.md)를 검토한다.
-기본 client 1280×800, 최소 검토 1024×680과 새 색/간격 토큰은 제안이며 실제 WPF/DPI 확인 전 확정값이 아니다.
+기본 client 1280×800, 작은 디자인 검토 영역 1024×680과 새 색/간격 토큰은 제안이다. 1024×680을 Window.MinWidth/MinHeight로 그대로 적용하지 않는다. 실제 Windows 작업 영역과 100/150/200% DPI에서 최소 크기·초기 크기·reflow를 결정한다.
 이번 시안은 Overview/Timeline/Trend이며 기존 Medication 시안과 구분한다. 브라우저 확인은 WPF 품질 증거가 아니다.
