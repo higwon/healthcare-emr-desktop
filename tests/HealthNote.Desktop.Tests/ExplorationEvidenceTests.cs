@@ -37,7 +37,7 @@ namespace HealthNote.Desktop.Tests
             {
                 shell.Timeline.LongTitle = true;
                 PrepareTimeline(shell);
-            }, new Size(900, 520));
+            }, new Size(720, 520));
         }
 
         private static void PrepareTimeline(ShellViewModel shell)
