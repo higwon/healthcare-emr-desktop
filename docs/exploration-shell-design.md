@@ -24,7 +24,7 @@ Source와 합성 표시는 작은 문구로 유지하고 개발 용어는 설계
 | 항목 | 제안 | 제한/구현 확인 |
 | --- | --- | --- |
 | 기본 client 영역 | 1280×800 DIP | 브라우저 viewport와 native Window 외곽 크기는 다름 |
-| 최소 client 검토 영역 | 1024×680 DIP | 최종 MinWidth/MinHeight는 chrome·work area 포함 실제 WPF에서 확인 |
+| 작은 client 디자인 검토 영역 | 1024×680 DIP | 디자인 참고값이며 Window.MinWidth/MinHeight에 그대로 적용하지 않음 |
 | 왼쪽 탐색 | 184 DIP, 좁은 배치 160 DIP | 탐색 글자 줄임/아이콘만 표시하지 않음 |
 | 본문 | Auto/* Grid + 22~28 DIP padding | 픽셀 절대 좌표/전체 고정 크기 카드 없음 |
 | 넓은 기록 탐색 | 목록 * / 상세 최소 285 DIP + 18 DIP 간격 | 선택 상세는 bounded 영역에서 wrap/scroll |
@@ -35,6 +35,8 @@ Source와 합성 표시는 작은 문구로 유지하고 개발 용어는 설계
 브라우저 시안의 전체 세로 scroll과 CSS breakpoint를 WPF panel/가상화 구현으로 그대로 복제하지 않는다.
 실제 screen working area가 제안 크기보다 작으면 첫 Window 위치/크기를 usable area에 맞추는 정책을 구현 시 검증한다.
 DPI를 올렸을 때 창이 화면 밖으로 나가는 상태를 합격으로 처리하지 않는다.
+예를 들어 1920×1080 화면의 200% DPI에서는 taskbar/chrome을 제외하기 전에도 약 960×540 DIP다. 1024×680 DIP를 강제 최소 크기로 삼지 않는다.
+실제 Windows 작업 영역과 100/150/200% DPI에서 초기 크기·최소 크기·reflow를 결정한다.
 최소 영역 이하가 필요한 monitor 조건은 지원 범위·reflow·예외를 실제 증거와 함께 확정한다.
 512px 모바일 시안을 Windows 최소 크기의 근거로 삼지 않는다.
 
@@ -67,6 +69,7 @@ ControlTemplate은 공통 버튼/선택 항목의 실제 상태 차이에만 최
 - 필터에서 빠진 선택은 해제한다. 상세 닫기가 late response로 뒤집히지 않는다.
 - 선택 기록의 출처/시각은 상세에 보존한다. 선택한 측정의 단위와 시각은 그래프·표·상세에서 같아야 한다.
 - null은 결측/빈 표식이다. 0으로 바꾸거나 결측 구간을 선으로 연결하지 않는다.
+- 선택한 결측의 값 영역은 `측정값 없음`으로 표시하고 단위를 붙이지 않는다. 표는 `결측`을 사용할 수 있으며 그래프·표·상세가 같은 결측 상태를 나타낸다. 지표 자체의 단위 메타데이터는 유지한다.
 - 시안의 최근 24건과 표시 6행은 표시 예시다. 실제 전체 fixture/API paging 계약으로 간주하지 않는다.
 - 시안의 검색은 화면 내 합성 기록 찾기다. 서버 검색 API/필터 계약을 추가하지 않는다.
 - 브라우저 재시도는 검토 상태 전환이며 실제 네트워크/오류 복구 증거가 아니다.
@@ -81,6 +84,7 @@ ControlTemplate은 공통 버튼/선택 항목의 실제 상태 차이에만 최
 HC-103의 Trend preview는 표/선택/동일 단위 표현까지다. 시안의 그래프는 최종 표현 목표이며 WPF chart 구현 완료를 의미하지 않는다.
 Healthcare API(query/paging/stale/context)는 HC-104, HealthTimelineControl은 HC-301, HealthTrendControl은 HC-302다.
 최종 Control의 rendering/downsampling/가상화는 기본 WPF 측정 후 정한다.
+HC-103의 Timeline preview는 기본 ListBox/ListBoxItem으로 목록과 선택 의미를 제공한다. 최종 HealthTimelineControl·custom panel·custom rendering/virtualization 구조는 선구현하지 않는다. HC-301에서 측정 후 선택한다.
 실제 API와 UI fixture 상태는 구분한다. readiness API의 성공을 건강 데이터 조회 성공으로 표시하지 않는다.
 
 ### ResourceDictionary 계획
@@ -92,15 +96,18 @@ Healthcare API(query/paging/stale/context)는 HC-104, HealthTimelineControl은 H
 
 Merge 순서와 의존을 위 순서로 단방향 유지한다.
 색/token은 DynamicResource로 참조하고 High Contrast에 시스템 brush를 적용한다.
+DynamicResource 사용만으로 High Contrast 지원을 주장하지 않는다. SystemColors.HighlightBrushKey/WindowBrushKey/WindowTextBrushKey 등 시스템 brush key를 고려하고 실제 Windows High Contrast에서 텍스트·선택·focus·border·disabled·error 상태를 확인한다. 미검증 상태는 완료로 표시하지 않는다.
 같은 key 중복 선언을 편의 override로 남발하지 않는다. 특정 view의 스타일은 view scope에 둔다.
+Light theme만 구현한다. 불필요한 theme framework/대형 design system과 모든 기본 Control의 재템플릿은 추가하지 않는다. Dark theme은 별도 명시적 범위 결정 전까지 제외한다.
 global IServiceProvider/Ioc, INavigationService/ScreenViewModelBase/AsyncLoadViewModel은 추가하지 않는다.
 새 화면의 실제 중복/책임이 확인되면 그때 작은 추상화를 검토한다.
 
 ### Keyboard·Automation 계획
 
 - Tab/Shift+Tab: 탐색 → context → 화면 필터 → 목록 → 상세/표의 자연스러운 순서.
-- 탐색은 기본 selection control 의미를 유지한다. 키보드 활성화는 Enter/Space, 현재 선택은 Automation state에 전달한다.
-- 기록 목록은 방향키 선택, Enter 상세 진입. 상세 내 Escape는 닫기 후 원래 event identity의 행으로 복귀한다.
+- 탐색은 ListBox/ListBoxItem 또는 기본 Selector의 selection/Automation 의미를 우선 사용한다. 여러 Button으로 선택 상태와 UIA를 다시 구현하지 않는다.
+- 기록 목록의 Up/Down은 선택과 상세 내용을 갱신하되 초점은 Timeline 목록에 유지한다. Enter에서만 상세로 진입한다.
+- 상세의 Escape는 상세 상호작용을 종료하고 원래 선택 event identity의 Timeline 행으로 초점을 돌린다. HTML 클릭 시 닫기 버튼으로 이동하는 동작은 시안 검토용이며 native focus 계약으로 복제하지 않는다.
 - 필터로 그 행이 없어졌다면 목록/필터로 돌아가며 임의의 첫 기록을 자동 선택하지 않는다.
 - 화면 전환 시 이전 화면의 초점 identity를 보존한다. query 완료/retry가 현재 사용자 초점을 빼앗지 않는다.
 - 안내 dialog는 모달 focus cycle과 닫기 후 호출 버튼 복귀를 확인한다.
@@ -114,6 +121,7 @@ Behavior/Binding correctness test와 evidence capture test를 분리해 파일 I
 ClientDiagnostics는 구체 타입을 유지한다. QueryCompleted는 success 전용이 아니므로 이름 변경 시 QueryFinished로 통일하되 별도 회귀 확인한다.
 이 디자인 PR에서 진단/command 구현을 바꾸지 않는다.
 100/150/200% 실제 DPI × 최소/기본 client 영역, keyboard/focus, Automation name/role/state, Binding/resource 오류가 WPF PR의 필수 증거다.
+기본/최소 배치·긴 제목·상세 열림/닫힘·세 preview 화면을 캡처한다. 실제 UIA의 Name·ControlType/role·IsEnabled·selected state와 Tab/Shift+Tab/Up/Down/Enter/Escape 초점 이동을 확인한다.
 브라우저 CSS 확대나 scaled bitmap을 실제 monitor DPI evidence로 표시하지 않는다.
 스크린리더/High Contrast/monitor 이동은 검증 환경과 제한을 기록하며 미확인 항목을 체크하지 않는다.
 
@@ -127,7 +135,7 @@ Codex in-app browser, localhost 시안. 브라우저 viewport는 CSS px이며 na
 | 1024×680 긴 제목 | 상세 아래 재배치, 선택 1개 유지, 두 줄 제목(측정 높이 39.5 CSS px), document 가로 넘침 없음 |
 | 기록 상세 Escape | 닫기 후 body-3 원래 행 초점 복귀 |
 | 체성분 상세 → 추이 | 화면 전환과 선택 측정 표시 확인 |
-| 결측 표 행 선택 | 값 없음 표시, 선 gap 유지, 0으로 표시하지 않음 |
+| 결측 표 행 선택 | 그래프 상단·선택 상세 `측정값 없음`(단위 없음), 표 `결측`, 선 gap 유지, 0으로 표시하지 않음 |
 | 유형 필터 검사 | 합성 행 1개 표시 |
 | 조회 오류 → 재시도 | 정상 시안으로 전환 |
 | Loading 취소 | Empty가 아닌 Idle/취소 문구 표시 |
