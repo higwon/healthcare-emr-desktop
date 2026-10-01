@@ -1,6 +1,6 @@
 # HC-103 실제 WPF Evidence
 
-2026-10-01. Release source: `13c158f96c9023cb494489908b0ff7eafd8d8bb4`.
+2026-10-01. Release source: `71ad371142f9c4c37bf00f9d1dec93551072ce94`.
 실제 Windows 11 build 26200 / 200% (192 DPI) 환경에서 표시한 net48 WPF Window의 content를 RenderTargetBitmap으로 캡처했다.
 OS desktop/chrome screenshot, 브라우저 시안, bitmap 배율로 만든 DPI 검증 이미지가 아니다.
 각 TXT의 build/source version, 실제 Visual DPI, client/outer/screen/work-area 크기를 확인한다.

@@ -29,7 +29,7 @@ Overview는 좁아지면 최근 기록/최근 측정 패널을 세로 배치한�
 ## 실제 로컬 검증
 
 2026-10-01, Windows 11 build 26200, CLR 4.0.30319.42000, SDK 10.0.300, Release.
-캡처 실행 소스 commit: `13c158f96c9023cb494489908b0ff7eafd8d8bb4`.
+캡처 실행 소스 commit: `71ad371142f9c4c37bf00f9d1dec93551072ce94`.
 이후 evidence/documentation commit에는 실행 코드 변경이 없다.
 
 | 항목 | 실제 결과 / 한계 |
