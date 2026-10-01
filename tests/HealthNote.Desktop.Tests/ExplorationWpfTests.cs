@@ -33,6 +33,11 @@ namespace HealthNote.Desktop.Tests
                 try
                 {
                     window.Show();
+                    Rect work = WindowSizing.GetWorkArea(window);
+                    Assert.IsGreaterThanOrEqualTo(work.Left, window.Left);
+                    Assert.IsGreaterThanOrEqualTo(work.Top, window.Top);
+                    Assert.IsLessThanOrEqualTo(work.Right, window.Left + window.ActualWidth);
+                    Assert.IsLessThanOrEqualTo(work.Bottom, window.Top + window.ActualHeight);
                     foreach (NavigationItem screen in shell.Navigation)
                     {
                         shell.SelectedNavigation = screen;

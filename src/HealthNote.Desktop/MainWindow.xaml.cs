@@ -25,8 +25,11 @@ namespace HealthNote.Desktop
 
         private void OnSourceInitialized(object? sender, EventArgs e)
         {
-            WindowSizing.Fit(this, WindowSizing.GetWorkSize(this));
-            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            Rect work = WindowSizing.GetWorkArea(this);
+            WindowSizing.Fit(this, work.Size);
+            WindowStartupLocation = WindowStartupLocation.Manual;
+            Left = work.Left + (work.Width - Width) / 2;
+            Top = work.Top + (work.Height - Height) / 2;
         }
 
         protected override void OnDpiChanged(DpiScale oldDpi, DpiScale newDpi)
