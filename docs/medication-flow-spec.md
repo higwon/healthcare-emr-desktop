@@ -1,8 +1,6 @@
-# 복약관리 Feature 참고 명세
+> 2026-10-01 재설계: **아래는 이전 범위/조사/구현 이력이다. 현재 제품·화면·도메인/API 방향·Task 순서는 [Windows 헬스케어 재설계](healthcare-windows-baseline.md)가 우선한다.** EMR·범용 Timeline/Trend 구현을 재개하지 않는다. 이 문서의 과거 완료 조건/추천/endpoint를 새 기능 계약으로 자동 채택하지 않는다.
 
-> 2026-09-30 방향 보정: 이 문서는 공개 서비스 조사 또는 기존 Medication 시안 참고자료다.
-> 현재 제품 요구·구현 순서는 [제품 범위](project-overview.md)와 [Epic/Task](epics-and-tasks.md)를 따른다.
-> 소비자 앱 재현과 Medication 우선 구현을 현재 기준으로 해석하지 않는다.
+# 복약관리 Feature 참고 명세
 
 2026-09-30. [실서비스 조사](service-flow-research.md)에 근거한 자체 Windows 설계 초안.
 네이버 UI의 복제나 미확인 API의 재현이 아니다. 아래 상태·모델·수용 기준은 자체 제품 정책이다.

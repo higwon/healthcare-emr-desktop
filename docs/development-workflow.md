@@ -1,3 +1,5 @@
+> 2026-10-01 재설계: 제품·Feature·실행 우선순위는 [Windows 헬스케어 재설계](healthcare-windows-baseline.md)를 따른다. 아래 공통 계층·런타임·C#/WPF·수명·검증 규칙은 유지하되, 이전 Feature 모델/endpoint/이슈 순서/시안 승인을 새 제품 기준으로 사용하지 않는다.
+
 # 저장소·이슈·PR 운영
 
 범위 source of truth는 epics-and-tasks.md, 운영 상태는 GitHub issue다. 문서에 상세 진행 로그를 중복해서 쌓지 않는다.

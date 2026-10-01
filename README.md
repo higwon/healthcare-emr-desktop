@@ -1,9 +1,24 @@
-# WPF EMR · RESTful API Portfolio
+# 건강노트 · Windows Healthcare Client
 
-2026-10-01 사용자 목표 변경: **환자 조회 → 진료 이력 → 진료 기록 작성·저장**을 실제 RESTful API로 연결하고 테스트한다.
-현재 범위/계약/개발 순서는 [EMR MVP](docs/emr-mvp.md)를 따른다. 기존 WPF/MVVM/CI 기반을 활용하고 Timeline/Trend custom control과 복약 계획은 보류한다. DPI·접근성 미검증 항목은 별도로 남기며 다음 EMR 구현을 차단하지 않는다.
+**네이버 헬스케어 웹의 화면·기능을 기반으로 만드는 WPF Windows 앱**.
+첫 실행은 헬스케어 홈이며, 바디리포트·복약관리·증상체크로 이어진다.
 
-아래 내용은 이전 Healthcare Client 목표와 개발 이력이다. 현재 목표에서 EMR을 제외한다는 의미로 사용하지 않는다.
+2026-10-01 전면 재설계: [새 설계 기준](docs/healthcare-windows-baseline.md)이 제품 범위·화면·도메인/API 방향·Epic/Task·PR 순서의 우선 기준이다.
+현재는 **설계 리뷰 단계**이며 소비자 건강 기능 구현 완료가 아니다. 실행 코드는 아직 이전 상태다.
+환자/진료 기록 EMR, Overview/Timeline/Trend 중심 구현은 보류한다. Draft PR #34는 병합하지 않는다.
+
+- UI: 사용자 제공 홈 이미지의 두 열 카드·정보 위계·상태·주요 행동을 Windows에 맞춰 설계한다.
+- 기능: 홈 → 복약 등록·체크·홈 반영부터 구현하고, 바디리포트와 증상체크로 확장한다.
+- 기술: net48 WPF·MVVM·netstandard 공유 계층·net10 자체 API·실제 REST 연동 테스트를 유지한다.
+- 연동: InBody 인증·네이버 API는 미확인이다. 첫 데모는 합성 자료와 명시된 연동 시뮬레이터를 사용한다.
+
+설계 리뷰 후 홈과 핵심 화면 시안을 검토하고, 계약·수용 기준을 확정한 Task 하나씩 작은 Draft PR로 구현한다.
+[공통 C#/WPF 규칙](docs/coding-rules.md), [공통 아키텍처](docs/architecture.md), [개발 운영](docs/development-workflow.md)을 함께 따른다.
+
+---
+
+다음은 이전 제품 방향·개발 이력이다. 아래의 과거 범위·추천·완료 조건은 현재 제품 기준이 아니다.
+기존 build/CI/MVVM/WPF 기반과 검증 이력은 보존하되 이전 업무 화면이 현재 요구를 충족한다는 의미는 아니다.
 
 # Healthcare EMR Desktop · 건강노트
 

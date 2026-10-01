@@ -1,3 +1,5 @@
+> 2026-10-01 재설계: **아래는 이전 범위/조사/구현 이력이다. 현재 제품·화면·도메인/API 방향·Task 순서는 [Windows 헬스케어 재설계](healthcare-windows-baseline.md)가 우선한다.** EMR·범용 Timeline/Trend 구현을 재개하지 않는다. 이 문서의 과거 완료 조건/추천/endpoint를 새 기능 계약으로 자동 채택하지 않는다.
+
 # HC-103 탐색 Shell 설계안
 
 2026-09-30. Task [#12](https://github.com/higwon/healthcare-emr-desktop/issues/12).

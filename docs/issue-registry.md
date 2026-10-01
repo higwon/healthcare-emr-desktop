@@ -1,4 +1,13 @@
+> 2026-10-01 재설계: 제품·Feature·실행 우선순위는 [Windows 헬스케어 재설계](healthcare-windows-baseline.md)를 따른다. 아래 공통 계층·런타임·C#/WPF·수명·검증 규칙은 유지하되, 이전 Feature 모델/endpoint/이슈 순서/시안 승인을 새 제품 기준으로 사용하지 않는다.
+
 # GitHub 작업 연결
+
+## 현재 재설계
+
+- [CON-001 #35 · 네이버 헬스케어 웹 기반 Windows 앱 전면 재설계](https://github.com/higwon/healthcare-emr-desktop/issues/35): 설계 리뷰.
+- EMR Epic #28 / Task #30·#31 / Draft PR #34: 현재 목표에서 진행·병합 보류, 이력 보존.
+- CON-002~008: 재설계 문서의 계획 후보이며 아직 생성·Ready 처리하지 않았다.
+- 아래 HC 목록은 이전 이력이다. 새 기능의 선행/AC는 설계 리뷰 후 재정의한다.
 
 2026-09-30 리뷰 반영. ID와 URL만 보존하며 상태는 GitHub에서 확인한다.
 기존 issue는 삭제/재생성하지 않았다. #3/#4 Epic의 목적·자식을 재배치했고 #18/#19를 초기 Custom Control 작업으로 전환했다. 조회 작업 #23 하나만 추가했다.

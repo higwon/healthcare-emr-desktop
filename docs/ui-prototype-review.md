@@ -1,8 +1,6 @@
-# 오늘의 건강·복약관리 UI 시안 검토
+> 2026-10-01 재설계: **아래는 이전 범위/조사/구현 이력이다. 현재 제품·화면·도메인/API 방향·Task 순서는 [Windows 헬스케어 재설계](healthcare-windows-baseline.md)가 우선한다.** EMR·범용 Timeline/Trend 구현을 재개하지 않는다. 이 문서의 과거 완료 조건/추천/endpoint를 새 기능 계약으로 자동 채택하지 않는다.
 
-> 2026-09-30 방향 보정: 이 문서는 공개 서비스 조사 또는 기존 Medication 시안 참고자료다.
-> 현재 제품 요구·구현 순서는 [제품 범위](project-overview.md)와 [Epic/Task](epics-and-tasks.md)를 따른다.
-> 소비자 앱 재현과 Medication 우선 구현을 현재 기준으로 해석하지 않는다.
+# 오늘의 건강·복약관리 UI 시안 검토
 
 2026-09-30. 소스: [UI fragment](../design/prototypes/health-daily.html).
 가칭 '건강노트'의 자체 Windows 화면 시안이다. 네이버 로고·제품명이나 실제 연동을 사용하지 않는다.

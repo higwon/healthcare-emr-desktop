@@ -1,3 +1,5 @@
+> 2026-10-01 재설계: 제품·Feature·실행 우선순위는 [Windows 헬스케어 재설계](healthcare-windows-baseline.md)를 따른다. 아래 공통 계층·런타임·C#/WPF·수명·검증 규칙은 유지하되, 이전 Feature 모델/endpoint/이슈 순서/시안 승인을 새 제품 기준으로 사용하지 않는다.
+
 # C# · WPF 코딩 규칙
 
 설계 기준 PR에서 검토한다. `.editorconfig`는 이 규칙의 자동 검사 가능한 부분만 담당한다.

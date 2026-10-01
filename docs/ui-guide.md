@@ -1,3 +1,5 @@
+> 2026-10-01 재설계: **아래는 이전 범위/조사/구현 이력이다. 현재 제품·화면·도메인/API 방향·Task 순서는 [Windows 헬스케어 재설계](healthcare-windows-baseline.md)가 우선한다.** EMR·범용 Timeline/Trend 구현을 재개하지 않는다. 이 문서의 과거 완료 조건/추천/endpoint를 새 기능 계약으로 자동 채택하지 않는다.
+
 # UI 구현 기준
 
 제품 화면 요구는 project-overview·health-data-exploration을 따른다. service-flow-research는 도메인 참고, ui-prototype-review는 기존 복약 시안의 제한된 검증 기록이다.
