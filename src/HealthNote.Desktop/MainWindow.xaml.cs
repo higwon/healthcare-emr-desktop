@@ -1,5 +1,7 @@
 using System;
 using System.Windows;
+using System.ComponentModel;
+using System.Windows.Media;
 using HealthNote.Desktop.ViewModels;
 
 namespace HealthNote.Desktop
@@ -7,6 +9,7 @@ namespace HealthNote.Desktop
     public partial class MainWindow : Window
     {
         private readonly ShellViewModel shell;
+        private bool _closed;
 
         public MainWindow(ShellViewModel shell)
         {
@@ -15,6 +18,60 @@ namespace HealthNote.Desktop
             DataContext = shell;
             Loaded += OnLoaded;
             Closed += OnClosed;
+            SourceInitialized += OnSourceInitialized;
+            SystemParameters.StaticPropertyChanged += OnSystemParametersChanged;
+            ApplySystemContrast();
+        }
+
+        private void OnSourceInitialized(object? sender, EventArgs e)
+        {
+            WindowSizing.Fit(this, WindowSizing.GetWorkSize(this));
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+        }
+
+        protected override void OnDpiChanged(DpiScale oldDpi, DpiScale newDpi)
+        {
+            base.OnDpiChanged(oldDpi, newDpi);
+            if (!_closed && IsLoaded)
+            {
+                WindowSizing.Fit(this, WindowSizing.GetWorkSize(this));
+            }
+        }
+
+        private void OnSystemParametersChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SystemParameters.HighContrast))
+            {
+                if (Dispatcher.CheckAccess()) ApplySystemContrast();
+                else Dispatcher.BeginInvoke(new Action(ApplySystemContrast));
+            }
+        }
+
+        private void ApplySystemContrast()
+        {
+            if (_closed)
+            {
+                return;
+            }
+            string[] keys = { "AppBackgroundBrush", "SurfaceBrush", "PrimaryTextBrush", "SecondaryTextBrush", "BorderBrush", "AccentBrush", "SelectionBrush", "SelectionTextBrush", "ErrorBrush", "FocusBrush" };
+            foreach (string key in keys)
+            {
+                Resources.Remove(key);
+            }
+            if (!SystemParameters.HighContrast)
+            {
+                return;
+            }
+            Resources["AppBackgroundBrush"] = FindResource(SystemColors.WindowBrushKey);
+            Resources["SurfaceBrush"] = FindResource(SystemColors.WindowBrushKey);
+            Resources["PrimaryTextBrush"] = FindResource(SystemColors.WindowTextBrushKey);
+            Resources["SecondaryTextBrush"] = FindResource(SystemColors.WindowTextBrushKey);
+            Resources["BorderBrush"] = FindResource(SystemColors.WindowTextBrushKey);
+            Resources["AccentBrush"] = FindResource(SystemColors.HighlightBrushKey);
+            Resources["SelectionBrush"] = FindResource(SystemColors.HighlightBrushKey);
+            Resources["SelectionTextBrush"] = FindResource(SystemColors.HighlightTextBrushKey);
+            Resources["ErrorBrush"] = FindResource(SystemColors.WindowTextBrushKey);
+            Resources["FocusBrush"] = FindResource(SystemColors.HighlightBrushKey);
         }
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
@@ -34,6 +91,9 @@ namespace HealthNote.Desktop
         {
             Loaded -= OnLoaded;
             Closed -= OnClosed;
+            _closed = true;
+            SourceInitialized -= OnSourceInitialized;
+            SystemParameters.StaticPropertyChanged -= OnSystemParametersChanged;
             shell.Dispose();
             DataContext = null;
         }

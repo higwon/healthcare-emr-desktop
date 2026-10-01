@@ -1,0 +1,77 @@
+<UserControl x:Class="HealthNote.Desktop.Views.OverviewView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" SizeChanged="OnSizeChanged">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel>
+            <TextBlock Text="건강 요약" FontSize="{DynamicResource TitleFontSize}" FontWeight="SemiBold" />
+            <TextBlock Text="선택한 기간의 기록과 최근 측정값을 한곳에서 확인해요." Style="{DynamicResource Caption}" Margin="0,6,0,24" />
+            <UniformGrid Columns="3" Margin="0,0,0,20">
+                <Border Style="{DynamicResource Surface}" Margin="0,0,8,0">
+                    <StackPanel>
+                        <TextBlock Text="건강 기록" />
+                        <TextBlock Text="{Binding RecordCount, StringFormat={}{0}건}" FontSize="30" FontWeight="SemiBold" Margin="0,8" />
+                        <TextBlock Text="{Binding Period}" Style="{DynamicResource Caption}" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{DynamicResource Surface}" Margin="4,0">
+                    <StackPanel>
+                        <TextBlock Text="체중 시계열" />
+                        <TextBlock Text="{Binding MeasurementCount, StringFormat={}{0}건}" FontSize="30" FontWeight="SemiBold" Margin="0,8" />
+                        <TextBlock Text="결측 자료 포함 · 합성 예시" Style="{DynamicResource Caption}" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{DynamicResource Surface}" Margin="8,0,0,0">
+                    <StackPanel>
+                        <TextBlock Text="기록 유형" />
+                        <TextBlock Text="{Binding TypeCount, StringFormat={}{0}개}" FontSize="30" FontWeight="SemiBold" Margin="0,8" />
+                        <TextBlock Text="날짜와 출처를 함께 확인" Style="{DynamicResource Caption}" />
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+            <Grid x:Name="SummaryPanels">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition x:Name="MeasurementColumn" Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Border Style="{DynamicResource Surface}">
+                    <StackPanel>
+                        <DockPanel Margin="0,0,0,12">
+                            <Button DockPanel.Dock="Right" Content="전체 기록 보기 →" Command="{Binding OpenTimelineCommand}" />
+                            <TextBlock Text="최근 건강 기록" Style="{DynamicResource SectionTitle}" />
+                        </DockPanel>
+                        <ItemsControl ItemsSource="{Binding RecentRecords}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Type}" Style="{DynamicResource Caption}" />
+                                            <Button Content="{Binding Title}" HorizontalAlignment="Left" Command="{Binding DataContext.OpenRecordCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" Margin="0,4" />
+                                            <TextBlock Text="{Binding Summary}" Style="{DynamicResource Caption}" />
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="1" Text="{Binding Date}" Style="{DynamicResource Caption}" Margin="8,0,0,0" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+                <Border x:Name="LatestMeasurements" Grid.Column="1" Style="{DynamicResource Surface}" Margin="16,0,0,0">
+                    <StackPanel>
+                        <DockPanel>
+                            <Button DockPanel.Dock="Right" Content="추이 보기 →" Command="{Binding OpenTrendCommand}" />
+                            <TextBlock Text="최근 측정값" Style="{DynamicResource SectionTitle}" />
+                        </DockPanel>
+                        <TextBlock Text="체중 70.8 kg     골격근량 31.2 kg" FontSize="20" Margin="0,8" />
+                        <TextBlock Text="2026.09.28 · 체성분 측정 · 합성 데모" Style="{DynamicResource Caption}" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
